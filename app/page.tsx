@@ -1,21 +1,41 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import Button from '@/components/ui/Button'
 import Loading from '@/components/Loading'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function LandingPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   useEffect(() => {
     if (!loading && user) {
       router.push('/dashboard')
     }
   }, [user, loading, router])
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedImage) {
+        handleCloseModal()
+      }
+    }
+
+    if (selectedImage) {
+      document.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'unset'
+    }
+  }, [selectedImage])
 
   if (loading) {
     return <Loading />
@@ -31,6 +51,14 @@ export default function LandingPage() {
 
   const handleUpgrade = () => {
     router.push('/signup?upgrade=true')
+  }
+
+  const handleImageClick = (imageSrc: string) => {
+    setSelectedImage(imageSrc)
+  }
+
+  const handleCloseModal = () => {
+    setSelectedImage(null)
   }
 
   return (
@@ -337,12 +365,24 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Screenshot 1 - Dashboard */}
-            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
-              <div className="bg-gray-100 rounded-lg p-4 mb-4 h-64 flex items-center justify-center">
-                <div className="text-center">
+            {/* Screenshot 1 - Dashboard Charts (Gráficos) */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200 hover:shadow-2xl transition-shadow">
+              <div 
+                className="relative bg-gray-50 rounded-lg p-2 mb-4 overflow-hidden cursor-pointer group"
+                onClick={() => handleImageClick('/images/Screenshot_1.jpg')}
+              >
+                <div className="relative w-full h-64 rounded-lg overflow-hidden">
+                  <Image
+                    src="/images/Screenshot_1.jpg"
+                    alt="Dashboard com gráficos de despesas por categoria e receitas vs despesas"
+                    fill
+                    className="object-contain group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity rounded-lg">
                   <svg
-                    className="w-16 h-16 mx-auto text-primary-600 mb-4"
+                    className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -351,29 +391,41 @@ export default function LandingPage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
                     />
                   </svg>
-                  <p className="text-sm text-gray-500">
-                    Dashboard com gráficos interativos
-                  </p>
                 </div>
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Dashboard Completo
+                Gráficos Interativos
               </h3>
               <p className="text-gray-600 text-sm">
-                Visualize saldo, receitas, despesas e gráficos por categoria
-                em tempo real
+                Visualize despesas por categoria e compare receitas vs despesas
+                ao longo dos meses com gráficos claros e intuitivos
+              </p>
+              <p className="text-xs text-primary-600 mt-2 font-medium">
+                Clique na imagem para ampliar
               </p>
             </div>
 
-            {/* Screenshot 2 - Transactions */}
-            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
-              <div className="bg-gray-100 rounded-lg p-4 mb-4 h-64 flex items-center justify-center">
-                <div className="text-center">
+            {/* Screenshot 2 - Dashboard Cards */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200 hover:shadow-2xl transition-shadow">
+              <div 
+                className="relative bg-gray-50 rounded-lg p-2 mb-4 overflow-hidden cursor-pointer group"
+                onClick={() => handleImageClick('/images/Screenshot_2.jpg')}
+              >
+                <div className="relative w-full h-64 rounded-lg overflow-hidden">
+                  <Image
+                    src="/images/Screenshot_2.jpg"
+                    alt="Dashboard com cards de saldo, receitas e despesas"
+                    fill
+                    className="object-contain group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity rounded-lg">
                   <svg
-                    className="w-16 h-16 mx-auto text-primary-600 mb-4"
+                    className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -382,29 +434,41 @@ export default function LandingPage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
                     />
                   </svg>
-                  <p className="text-sm text-gray-500">
-                    Gerenciamento de transações
-                  </p>
                 </div>
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Transações Organizadas
+                Visão Geral Rápida
               </h3>
               <p className="text-gray-600 text-sm">
-                Adicione, edite e organize suas receitas e despesas por
-                categorias
+                Acompanhe seu saldo mensal, total de receitas e despesas em
+                cards visuais e fáceis de entender
+              </p>
+              <p className="text-xs text-primary-600 mt-2 font-medium">
+                Clique na imagem para ampliar
               </p>
             </div>
 
-            {/* Screenshot 3 - Goals */}
-            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
-              <div className="bg-gray-100 rounded-lg p-4 mb-4 h-64 flex items-center justify-center">
-                <div className="text-center">
+            {/* Screenshot 3 - Goals (Metas) */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200 hover:shadow-2xl transition-shadow">
+              <div 
+                className="relative bg-gray-50 rounded-lg p-2 mb-4 overflow-hidden cursor-pointer group"
+                onClick={() => handleImageClick('/images/Screenshot_3.jpg')}
+              >
+                <div className="relative w-full h-64 rounded-lg overflow-hidden">
+                  <Image
+                    src="/images/Screenshot_3.jpg"
+                    alt="Página de metas financeiras com acompanhamento de progresso"
+                    fill
+                    className="object-contain group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity rounded-lg">
                   <svg
-                    className="w-16 h-16 mx-auto text-primary-600 mb-4"
+                    className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -413,23 +477,65 @@ export default function LandingPage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
                     />
                   </svg>
-                  <p className="text-sm text-gray-500">
-                    Acompanhamento de metas
-                  </p>
                 </div>
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">
                 Metas de Poupança
               </h3>
               <p className="text-gray-600 text-sm">
-                Defina metas, acompanhe o progresso e alcance seus objetivos
-                financeiros
+                Defina metas, acompanhe o progresso com barras visuais e
+                alcance seus objetivos financeiros
+              </p>
+              <p className="text-xs text-primary-600 mt-2 font-medium">
+                Clique na imagem para ampliar
               </p>
             </div>
           </div>
+
+          {/* Modal de Zoom */}
+          {selectedImage && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4"
+              onClick={handleCloseModal}
+            >
+              <div className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center">
+                <button
+                  onClick={handleCloseModal}
+                  className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors shadow-lg"
+                  aria-label="Fechar"
+                >
+                  <svg
+                    className="w-6 h-6 text-gray-700"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                <div
+                  className="relative w-full h-full max-w-6xl max-h-[90vh]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Image
+                    src={selectedImage}
+                    alt="Imagem ampliada"
+                    fill
+                    className="object-contain rounded-lg"
+                    sizes="90vw"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
