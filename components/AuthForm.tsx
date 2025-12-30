@@ -73,7 +73,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             type="text"
             placeholder="Seu nome completo"
             {...register('name')}
-            error={errors.name?.message}
+            error={!isLogin && 'name' in errors ? errors.name?.message : undefined}
           />
         )}
 
@@ -99,7 +99,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             type="password"
             placeholder="••••••••"
             {...register('confirmPassword')}
-            error={errors.confirmPassword?.message}
+            error={!isLogin && 'confirmPassword' in errors ? errors.confirmPassword?.message : undefined}
           />
         )}
 

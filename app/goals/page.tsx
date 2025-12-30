@@ -220,7 +220,7 @@ export default function GoalsPage() {
               <p className="text-gray-600">
                 Tem certeza que deseja excluir a meta
                 {selectedGoal && (
-                  <span className="font-medium"> "{selectedGoal.title}"</span>
+                  <span className="font-medium"> &quot;{selectedGoal.title}&quot;</span>
                 )}
                 ? Esta ação não pode ser desfeita.
               </p>

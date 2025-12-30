@@ -31,7 +31,7 @@ export default function TransactionList({
       <div className="text-center py-12">
         <p className="text-gray-500">Nenhuma transação registrada</p>
         <p className="text-sm text-gray-400 mt-2">
-          Clique em "Nova Transação" para começar
+          Clique em &quot;Nova Transação&quot; para começar
         </p>
       </div>
     )

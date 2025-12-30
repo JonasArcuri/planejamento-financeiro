@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useTransactions } from '@/hooks/useTransactions'
 import { logout } from '@/services/firebase/auth'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Button from '@/components/ui/Button'
 import StatCard from '@/components/dashboard/StatCard'
@@ -35,7 +35,7 @@ import {
   identifyHighExpenses,
 } from '@/lib/utils'
 
-export default function DashboardPage() {
+function DashboardContent() {
   const { user, userData } = useAuth()
   const { transactions, loading, fetchTransactions } = useTransactions(user?.uid || null)
   const { goals } = useGoals(user?.uid || null)
@@ -320,5 +320,13 @@ export default function DashboardPage() {
         </main>
       </div>
     </ProtectedRoute>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <DashboardContent />
+    </Suspense>
   )
 }
