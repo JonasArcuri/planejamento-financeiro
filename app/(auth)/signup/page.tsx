@@ -2,19 +2,25 @@
 
 import AuthForm from '@/components/AuthForm'
 import { useAuth } from '@/hooks/useAuth'
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Loading from '@/components/Loading'
 
-export default function SignUpPage() {
+function SignUpContent() {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     if (!loading && user) {
-      router.push('/dashboard')
+      const shouldUpgrade = searchParams.get('upgrade') === 'true'
+      if (shouldUpgrade) {
+        router.push('/upgrade')
+      } else {
+        router.push('/dashboard')
+      }
     }
-  }, [user, loading, router])
+  }, [user, loading, router, searchParams])
 
   if (loading) {
     return <Loading />
@@ -38,5 +44,13 @@ export default function SignUpPage() {
         <AuthForm mode="signup" />
       </div>
     </div>
+  )
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <SignUpContent />
+    </Suspense>
   )
 }
