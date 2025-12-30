@@ -1,0 +1,53 @@
+// Regras de segurança do Firestore
+// Copie e cole este conteúdo no Firebase Console > Firestore Database > Rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Usuários: apenas o próprio usuário pode ler/escrever
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Transações: apenas o próprio usuário pode ler/escrever
+    match /transactions/{transactionId} {
+      // Permitir leitura se o usuário for o dono da transação
+      allow read: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+      
+      // Permitir criação se o userId no documento for o usuário autenticado
+      allow create: if request.auth != null && 
+        request.resource.data.userId == request.auth.uid;
+      
+      // Permitir atualização se o usuário for o dono da transação
+      allow update: if request.auth != null && 
+        resource.data.userId == request.auth.uid &&
+        request.resource.data.userId == request.auth.uid;
+      
+      // Permitir exclusão se o usuário for o dono da transação
+      allow delete: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+    }
+    
+    // Metas: apenas o próprio usuário pode ler/escrever
+    match /goals/{goalId} {
+      // Permitir leitura se o usuário for o dono da meta
+      allow read: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+      
+      // Permitir criação se o userId no documento for o usuário autenticado
+      allow create: if request.auth != null && 
+        request.resource.data.userId == request.auth.uid;
+      
+      // Permitir atualização se o usuário for o dono da meta
+      allow update: if request.auth != null && 
+        resource.data.userId == request.auth.uid &&
+        request.resource.data.userId == request.auth.uid;
+      
+      // Permitir exclusão se o usuário for o dono da meta
+      allow delete: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+    }
+  }
+}
+
