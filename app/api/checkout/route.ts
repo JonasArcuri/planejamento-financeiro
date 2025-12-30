@@ -36,9 +36,16 @@ export async function POST(request: NextRequest) {
       metadata: {
         userId: userId,
       },
+      subscription_data: {
+        metadata: {
+          userId: userId, // Também adicionar no subscription
+        },
+      },
       success_url: `${appUrl}/dashboard?success=true`,
       cancel_url: `${appUrl}/dashboard?canceled=true`,
     })
+
+    console.log(`🛒 Checkout criado - userId: ${userId}, sessionId: ${session.id}`)
 
     return NextResponse.json({ sessionId: session.id, url: session.url })
   } catch (error: any) {

@@ -79,13 +79,34 @@ export async function POST(request: NextRequest) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
         const userId = session.metadata?.userId
+        const subscriptionId = session.subscription as string
+
+        console.log(`📦 Checkout concluído - userId: ${userId}, subscriptionId: ${subscriptionId}`)
 
         if (userId) {
-          await updateUserPlan(
-            userId,
-            'premium',
-            session.subscription as string
-          )
+          // Buscar subscription para verificar status
+          if (subscriptionId) {
+            try {
+              const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+              console.log(`📋 Subscription status: ${subscription.status}`)
+              
+              if (subscription.status === 'active') {
+                await updateUserPlan(userId, 'premium', subscriptionId)
+                console.log(`✅ Usuário ${userId} atualizado para premium após checkout`)
+              } else {
+                console.log(`⚠️ Subscription não está ativa ainda: ${subscription.status}`)
+              }
+            } catch (err: any) {
+              console.error('Erro ao buscar subscription:', err.message)
+              // Mesmo assim, tentar atualizar
+              await updateUserPlan(userId, 'premium', subscriptionId)
+            }
+          } else {
+            // Se não tiver subscriptionId, atualizar mesmo assim
+            await updateUserPlan(userId, 'premium')
+          }
+        } else {
+          console.warn('⚠️ Checkout concluído mas userId não encontrado no metadata')
         }
         break
       }
@@ -95,12 +116,31 @@ export async function POST(request: NextRequest) {
         const subscription = event.data.object as Stripe.Subscription
         const userId = subscription.metadata?.userId
 
+        console.log(`🔄 Subscription ${event.type} - userId: ${userId}, status: ${subscription.status}`)
+
         if (userId) {
-          await updateUserPlan(
-            userId,
-            subscription.status === 'active' ? 'premium' : 'free',
-            subscription.id
-          )
+          const newPlan = subscription.status === 'active' ? 'premium' : 'free'
+          await updateUserPlan(userId, newPlan, subscription.id)
+          console.log(`✅ Usuário ${userId} atualizado para ${newPlan}`)
+        } else {
+          // Tentar buscar userId pelo customer
+          if (subscription.customer) {
+            try {
+              const customer = await stripe.customers.retrieve(subscription.customer as string)
+              if (customer && !customer.deleted && 'metadata' in customer) {
+                const customerUserId = customer.metadata?.userId
+                if (customerUserId) {
+                  const newPlan = subscription.status === 'active' ? 'premium' : 'free'
+                  await updateUserPlan(customerUserId, newPlan, subscription.id)
+                  console.log(`✅ Usuário ${customerUserId} atualizado para ${newPlan} via customer metadata`)
+                } else {
+                  console.warn(`⚠️ Customer ${subscription.customer} não tem userId no metadata`)
+                }
+              }
+            } catch (err: any) {
+              console.error('Erro ao buscar customer:', err.message)
+            }
+          }
         }
         break
       }
@@ -109,8 +149,11 @@ export async function POST(request: NextRequest) {
         const subscription = event.data.object as Stripe.Subscription
         const userId = subscription.metadata?.userId
 
+        console.log(`🗑️ Subscription deletada - userId: ${userId}`)
+
         if (userId) {
           await updateUserPlan(userId, 'free')
+          console.log(`✅ Usuário ${userId} rebaixado para free`)
         }
         break
       }
@@ -119,9 +162,25 @@ export async function POST(request: NextRequest) {
         const invoice = event.data.object as Stripe.Invoice
         const subscriptionId = invoice.subscription as string
 
+        console.log(`💳 Pagamento bem-sucedido - subscriptionId: ${subscriptionId}`)
+
         if (subscriptionId) {
-          // TODO: Buscar userId pelo subscriptionId e atualizar
-          console.log(`Pagamento bem-sucedido para subscription ${subscriptionId}`)
+          try {
+            const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+            const userId = subscription.metadata?.userId || 
+              (subscription.customer ? 
+                (await stripe.customers.retrieve(subscription.customer as string) as any)?.metadata?.userId : 
+                null)
+
+            if (userId) {
+              await updateUserPlan(userId, 'premium', subscriptionId)
+              console.log(`✅ Usuário ${userId} confirmado como premium após pagamento`)
+            } else {
+              console.warn(`⚠️ Pagamento bem-sucedido mas userId não encontrado para subscription ${subscriptionId}`)
+            }
+          } catch (err: any) {
+            console.error('Erro ao processar invoice.payment_succeeded:', err.message)
+          }
         }
         break
       }
@@ -130,15 +189,31 @@ export async function POST(request: NextRequest) {
         const invoice = event.data.object as Stripe.Invoice
         const subscriptionId = invoice.subscription as string
 
+        console.log(`❌ Pagamento falhou - subscriptionId: ${subscriptionId}`)
+
         if (subscriptionId) {
-          // TODO: Buscar userId pelo subscriptionId e notificar
-          console.log(`Pagamento falhou para subscription ${subscriptionId}`)
+          try {
+            const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+            const userId = subscription.metadata?.userId
+
+            if (userId) {
+              console.log(`⚠️ Pagamento falhou para usuário ${userId}. Subscription status: ${subscription.status}`)
+              // Não rebaixar imediatamente - o Stripe tentará novamente
+              // Só rebaixar se a subscription for cancelada
+              if (subscription.status === 'canceled' || subscription.status === 'unpaid') {
+                await updateUserPlan(userId, 'free')
+                console.log(`✅ Usuário ${userId} rebaixado para free devido a falha de pagamento`)
+              }
+            }
+          } catch (err: any) {
+            console.error('Erro ao processar invoice.payment_failed:', err.message)
+          }
         }
         break
       }
 
       default:
-        console.log(`Evento não tratado: ${event.type}`)
+        console.log(`ℹ️ Evento não tratado: ${event.type}`)
     }
 
     return NextResponse.json({ received: true })

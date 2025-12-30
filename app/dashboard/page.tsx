@@ -44,17 +44,42 @@ function DashboardContent() {
   const searchParams = useSearchParams()
   const { showToast } = useToast()
 
-  // Verificar se veio do checkout
+  // Verificar se veio do checkout e recarregar dados do usuário
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
       showToast('Assinatura ativada com sucesso! Bem-vindo ao Premium!', 'success')
+      
+      // Recarregar dados do usuário após alguns segundos (tempo para webhook processar)
+      if (user?.uid) {
+        setTimeout(async () => {
+          const { getUserData } = await import('@/services/firebase/auth')
+          try {
+            const updatedData = await getUserData(user.uid)
+            if (updatedData?.plan === 'premium') {
+              // Recarregar página para atualizar estado
+              window.location.reload()
+            } else {
+              // Tentar novamente após mais tempo
+              setTimeout(async () => {
+                const retryData = await getUserData(user.uid)
+                if (retryData?.plan === 'premium') {
+                  window.location.reload()
+                }
+              }, 3000)
+            }
+          } catch (error) {
+            console.error('Erro ao recarregar dados do usuário:', error)
+          }
+        }, 2000)
+      }
+      
       // Limpar URL
       router.replace('/dashboard')
     } else if (searchParams.get('canceled') === 'true') {
       showToast('Checkout cancelado', 'info')
       router.replace('/dashboard')
     }
-  }, [searchParams, router, showToast])
+  }, [searchParams, router, showToast, user?.uid])
 
   useEffect(() => {
     if (user?.uid) {

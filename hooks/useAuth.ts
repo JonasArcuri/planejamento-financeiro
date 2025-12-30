@@ -40,7 +40,30 @@ export function useAuth() {
       setLoading(false)
     })
 
-    return () => unsubscribe()
+    // Recarregar dados do usuário periodicamente para pegar atualizações de plano
+    // (útil quando o plano é atualizado via webhook)
+    const refreshInterval = setInterval(async () => {
+      const currentUser = getCurrentUser()
+      if (currentUser) {
+        try {
+          const data = await getUserData(currentUser.uid)
+          // Só atualizar se o plano mudou para evitar re-renders desnecessários
+          setUserData((prev) => {
+            if (!prev || (data && data.plan !== prev.plan)) {
+              return data
+            }
+            return prev
+          })
+        } catch (error) {
+          console.error('Erro ao atualizar dados do usuário:', error)
+        }
+      }
+    }, 10000) // A cada 10 segundos
+
+    return () => {
+      unsubscribe()
+      clearInterval(refreshInterval)
+    }
   }, [])
 
   return { user, userData, loading }
