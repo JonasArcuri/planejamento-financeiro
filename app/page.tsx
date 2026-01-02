@@ -9,6 +9,7 @@ import Loading from '@/components/Loading'
 import Link from 'next/link'
 import Image from 'next/image'
 import LanguageSelector from '@/components/landing/LanguageSelector'
+import InstallPrompt from '@/components/pwa/InstallPrompt'
 
 export default function LandingPage() {
   const { user, loading } = useAuth()
@@ -564,6 +565,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Install Prompt */}
+      <InstallPrompt />
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">

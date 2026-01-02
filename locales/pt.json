@@ -151,6 +151,13 @@
     "november": "Novembro",
     "december": "Dezembro"
   },
+  "pwa": {
+    "installTitle": "Instalar App",
+    "installDescription": "Instale nosso app para acesso rápido e offline",
+    "install": "Instalar",
+    "installed": "App instalado com sucesso!",
+    "installError": "Erro ao instalar o app"
+  },
   "settings": {
     "title": "Configurações",
     "language": "Idioma",

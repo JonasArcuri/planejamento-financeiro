@@ -1,9 +1,16 @@
-/** @type {import('next').NextConfig} */
+/**
+ * Configuração do Service Worker para next-pwa
+ * 
+ * Este arquivo contém configurações customizadas para o service worker.
+ * O next-pwa gerencia automaticamente o service worker, mas você pode
+ * personalizar o comportamento aqui.
+ */
+
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development', // Desabilitar PWA em desenvolvimento
+  disable: process.env.NODE_ENV === 'development',
   runtimeCaching: [
     {
       urlPattern: /^https?.*/,
@@ -41,8 +48,5 @@ const withPWA = require('next-pwa')({
   ],
 })
 
-const nextConfig = {
-  reactStrictMode: true,
-}
+module.exports = withPWA
 
-module.exports = withPWA(nextConfig)
