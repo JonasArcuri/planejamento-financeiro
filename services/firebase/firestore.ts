@@ -12,6 +12,7 @@ import {
   orderBy,
   Timestamp,
   QueryConstraint,
+  deleteField,
 } from 'firebase/firestore'
 import { db } from './config'
 import { Transaction, TransactionFormData } from '@/types'
@@ -32,14 +33,21 @@ export async function createTransaction(
     // Converter data string para Timestamp
     const dateTimestamp = Timestamp.fromDate(new Date(data.date))
     
-    const docRef = await addDoc(collection(db, TRANSACTIONS_COLLECTION), {
+    const transactionData: any = {
       userId,
       type: data.type,
       category: data.category,
       amount: data.amount,
       date: dateTimestamp, // Salvar como Timestamp
       createdAt: Timestamp.now(),
-    })
+    }
+
+    // Salvar customCategory apenas se fornecido (quando categoria é "Outros")
+    if (data.customCategory && data.customCategory.trim().length > 0) {
+      transactionData.customCategory = data.customCategory.trim()
+    }
+
+    const docRef = await addDoc(collection(db, TRANSACTIONS_COLLECTION), transactionData)
     return docRef.id
   } catch (error: any) {
     throw new Error(error.message || 'Erro ao criar transação')
@@ -63,6 +71,16 @@ export async function updateTransaction(
     const updateData: any = { ...data }
     if (data.date) {
       updateData.date = Timestamp.fromDate(new Date(data.date))
+    }
+
+    // Lidar com customCategory:
+    // - Se categoria for "Outros" e customCategory fornecido, salvar
+    // - Se categoria não for "Outros", remover customCategory do Firestore
+    if (data.category === 'Outros' && data.customCategory && data.customCategory.trim().length > 0) {
+      updateData.customCategory = data.customCategory.trim()
+    } else if (data.category && data.category !== 'Outros') {
+      // Remover customCategory quando categoria não é "Outros"
+      updateData.customCategory = deleteField()
     }
     
     await updateDoc(transactionRef, updateData)
@@ -103,7 +121,11 @@ export async function getTransaction(
       const data = transactionSnap.data()
       return {
         id: transactionSnap.id,
-        ...data,
+        userId: data.userId,
+        type: data.type,
+        category: data.category,
+        customCategory: data.customCategory || undefined, // Incluir customCategory se existir
+        amount: data.amount,
         date: data.date instanceof Timestamp
           ? data.date.toDate().toISOString()
           : data.date,
@@ -160,6 +182,7 @@ export async function getUserTransactions(
         userId: data.userId,
         type: data.type,
         category: data.category,
+        customCategory: data.customCategory || undefined, // Incluir customCategory se existir
         amount: data.amount,
         date: data.date instanceof Timestamp
           ? data.date.toDate().toISOString()
@@ -192,6 +215,7 @@ export async function getUserTransactions(
             userId: data.userId,
             type: data.type,
             category: data.category,
+            customCategory: data.customCategory || undefined, // Incluir customCategory se existir
             amount: data.amount,
             date: data.date instanceof Timestamp
               ? data.date.toDate().toISOString()

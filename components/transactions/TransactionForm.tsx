@@ -31,33 +31,49 @@ export default function TransactionForm({
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
+    setValue,
   } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
     defaultValues: transaction
       ? {
           type: transaction.type,
           category: transaction.category,
+          customCategory: transaction.customCategory || '',
           amount: transaction.amount,
           date: transaction.date.split('T')[0], // Formato YYYY-MM-DD
         }
       : {
           type: 'expense',
           category: '',
+          customCategory: '',
           amount: 0,
           date: new Date().toISOString().split('T')[0],
         },
   })
+
+  // Observar mudanças na categoria para exibir/ocultar campo customCategory
+  const selectedCategory = watch('category')
+  const showCustomCategory = selectedCategory === 'Outros'
 
   useEffect(() => {
     if (transaction) {
       reset({
         type: transaction.type,
         category: transaction.category,
+        customCategory: transaction.customCategory || '',
         amount: transaction.amount,
         date: transaction.date.split('T')[0],
       })
     }
   }, [transaction, reset])
+
+  // Limpar customCategory quando categoria mudar de "Outros" para outra
+  useEffect(() => {
+    if (selectedCategory !== 'Outros') {
+      setValue('customCategory', '', { shouldValidate: false })
+    }
+  }, [selectedCategory, setValue])
 
   const handleFormSubmit = async (data: TransactionFormData) => {
     await onSubmit(data)
@@ -91,6 +107,19 @@ export default function TransactionForm({
         options={categoryOptions}
         error={errors.category?.message}
       />
+
+      {/* Campo customizado que aparece apenas quando categoria é "Outros" */}
+      {showCustomCategory && (
+        <div className="transition-opacity duration-200 ease-in-out">
+          <Input
+            label="Especifique o gasto/receita"
+            type="text"
+            placeholder="Ex: Manutenção do carro, Presente, etc."
+            {...register('customCategory')}
+            error={errors.customCategory?.message}
+          />
+        </div>
+      )}
 
       <Input
         label="Valor"

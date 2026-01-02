@@ -276,6 +276,80 @@ function DashboardContent() {
             />
           </div>
 
+          {/* Ações Rápidas */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Ações Rápidas
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Button
+                variant="outline"
+                onClick={() => router.push('/transactions')}
+                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 hover:border-primary-300 transition-all"
+              >
+                <svg
+                  className="w-8 h-8 text-primary-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                  />
+                </svg>
+                <span className="font-medium text-gray-900">Gerenciar Transações</span>
+                <span className="text-xs text-gray-500">Adicione e edite suas receitas e despesas</span>
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => router.push('/goals')}
+                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 hover:border-primary-300 transition-all"
+              >
+                <svg
+                  className="w-8 h-8 text-primary-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                  />
+                </svg>
+                <span className="font-medium text-gray-900">Gerenciar Metas</span>
+                <span className="text-xs text-gray-500">Defina e acompanhe suas metas de poupança</span>
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => router.push('/reports')}
+                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 hover:border-primary-300 transition-all"
+              >
+                <svg
+                  className="w-8 h-8 text-primary-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                  />
+                </svg>
+                <span className="font-medium text-gray-900">Gerar Relatório PDF</span>
+                <span className="text-xs text-gray-500">Exporte suas transações mensais em PDF</span>
+              </Button>
+            </div>
+          </div>
+
           {/* Alerta de Gastos Altos - Premium */}
           {highExpenses.some((item) => item.isHigh) && (
             <div className="mb-6">
@@ -325,22 +399,6 @@ function DashboardContent() {
           {/* Metas Financeiras */}
           <div className="mb-6">
             <GoalsSummary goals={goals} transactions={transactions} />
-          </div>
-
-          {/* Links para outras páginas */}
-          <div className="mt-8 flex gap-4 justify-center">
-            <Button
-              variant="outline"
-              onClick={() => router.push('/transactions')}
-            >
-              Gerenciar Transações
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => router.push('/goals')}
-            >
-              Gerenciar Metas
-            </Button>
           </div>
         </main>
       </div>

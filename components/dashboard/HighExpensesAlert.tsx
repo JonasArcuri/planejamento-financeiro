@@ -59,7 +59,9 @@ export default function HighExpensesAlert({ highExpenses }: HighExpensesAlertPro
               >
                 <div>
                   <p className="font-medium text-gray-900">
-                    {item.transaction.category}
+                    {item.transaction.category === 'Outros' && item.transaction.customCategory
+                      ? `Outros - ${item.transaction.customCategory}`
+                      : item.transaction.category}
                   </p>
                   <p className="text-xs text-gray-500">
                     {formatDate(item.transaction.date)}

@@ -63,7 +63,9 @@ export default function TransactionList({
                 />
                 <div>
                   <p className="font-medium text-gray-900">
-                    {transaction.category}
+                    {transaction.category === 'Outros' && transaction.customCategory
+                      ? `Outros - ${transaction.customCategory}`
+                      : transaction.category}
                   </p>
                   <p className="text-sm text-gray-500">
                     {formatDate(transaction.date)}
