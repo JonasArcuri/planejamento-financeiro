@@ -14,8 +14,7 @@ import TransactionLimitAlert from '@/components/premium/TransactionLimitAlert'
 import TransactionCounter from '@/components/premium/TransactionCounter'
 import Modal from '@/components/ui/Modal'
 import Button from '@/components/ui/Button'
-import ThemeToggle from '@/components/ui/ThemeToggle'
-import LanguageToggle from '@/components/ui/LanguageToggle'
+import SettingsButton from '@/components/ui/SettingsButton'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useRouter } from 'next/navigation'
 import { logout } from '@/services/firebase/auth'
@@ -131,8 +130,7 @@ export default function TransactionsPage() {
                 </h1>
               </div>
               <div className="flex items-center gap-4">
-                <LanguageToggle />
-                <ThemeToggle />
+                <SettingsButton />
                 <span className="text-sm text-gray-600 dark:text-gray-300">
                   {userData?.name || user?.email}
                 </span>

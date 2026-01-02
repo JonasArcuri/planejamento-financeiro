@@ -8,8 +8,7 @@ import { useState, useMemo } from 'react'
 import { Transaction } from '@/types'
 import MonthYearFilter from '@/components/reports/MonthYearFilter'
 import Button from '@/components/ui/Button'
-import ThemeToggle from '@/components/ui/ThemeToggle'
-import LanguageToggle from '@/components/ui/LanguageToggle'
+import SettingsButton from '@/components/ui/SettingsButton'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useRouter } from 'next/navigation'
 import { logout } from '@/services/firebase/auth'
@@ -135,8 +134,7 @@ export default function ReportsPage() {
                 </h1>
               </div>
               <div className="flex items-center gap-4">
-                <LanguageToggle />
-                <ThemeToggle />
+                <SettingsButton />
                 <Button variant="ghost" onClick={() => router.push('/dashboard')}>
                   {t('common.dashboard')}
                 </Button>

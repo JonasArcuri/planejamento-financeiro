@@ -148,6 +148,14 @@
     "october": "Outubro",
     "november": "Novembro",
     "december": "Dezembro"
+  },
+  "settings": {
+    "title": "Configurações",
+    "language": "Idioma",
+    "theme": "Tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "close": "Fechar"
   }
 }
 

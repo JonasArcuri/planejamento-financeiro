@@ -21,8 +21,7 @@ import { usePlan } from '@/hooks/usePlan'
 import { useToast } from '@/contexts/ToastContext'
 import { useGoals } from '@/hooks/useGoals'
 import GoalsSummary from '@/components/dashboard/GoalsSummary'
-import ThemeToggle from '@/components/ui/ThemeToggle'
-import LanguageToggle from '@/components/ui/LanguageToggle'
+import SettingsButton from '@/components/ui/SettingsButton'
 import { useLanguage } from '@/contexts/LanguageContext'
 import {
   formatCurrency,
@@ -187,8 +186,7 @@ function DashboardContent() {
                 {t('dashboard.appName')}
               </h1>
               <div className="flex items-center gap-4">
-                <LanguageToggle />
-                <ThemeToggle />
+                <SettingsButton />
                 <span className="text-sm text-gray-600 dark:text-gray-300">
                   {userData?.name || user?.email}
                 </span>
