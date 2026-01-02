@@ -617,6 +617,15 @@ export default function LandingPage() {
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
             <p>&copy; 2025 Planejamento Finanças. Todos os direitos reservados.</p>
+            <div className="mt-4 flex justify-center gap-6">
+              <Link href="/privacy" className="hover:text-white transition-colors">
+                Política de Privacidade
+              </Link>
+              <span className="text-gray-600">|</span>
+              <Link href="/terms" className="hover:text-white transition-colors">
+                Termos de Uso
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

@@ -4,13 +4,24 @@
 import { useState } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useAuth } from '@/hooks/useAuth'
+import { useRouter } from 'next/navigation'
+import { useToast } from '@/contexts/ToastContext'
 import Modal from './Modal'
 import Button from './Button'
+import DeleteAccountModal from '@/components/settings/DeleteAccountModal'
+import { deleteUserAccount } from '@/services/firebase/account'
+import { getCurrentUser } from '@/services/firebase/auth'
 
 export default function SettingsButton() {
   const { language, setLanguage, t } = useLanguage()
   const { theme, setTheme } = useTheme()
+  const { user } = useAuth()
+  const router = useRouter()
+  const { showToast } = useToast()
   const [isOpen, setIsOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const handleLanguageChange = async (newLanguage: 'pt' | 'en') => {
     await setLanguage(newLanguage)
@@ -147,6 +158,28 @@ export default function SettingsButton() {
             </div>
           </div>
 
+          {/* Seção de Exclusão de Conta */}
+          <div className="pt-4 border-t border-red-200 dark:border-red-800">
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                {t('settings.deleteAccount')}
+              </h4>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
+                {t('settings.deleteAccountDescription')}
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsOpen(false)
+                  setIsDeleteModalOpen(true)
+                }}
+                className="w-full border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+              >
+                {t('settings.deleteAccountButton')}
+              </Button>
+            </div>
+          </div>
+
           {/* Botão de Fechar */}
           <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
             <Button
@@ -159,6 +192,50 @@ export default function SettingsButton() {
           </div>
         </div>
       </Modal>
+
+      {/* Modal de Exclusão de Conta */}
+      <DeleteAccountModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={async (password: string) => {
+          if (!user) {
+            showToast(t('settings.deleteAccountError'), 'error')
+            return
+          }
+
+          setIsDeleting(true)
+          try {
+            // Obter usuário atual do Firebase Auth
+            const currentUser = getCurrentUser()
+            if (!currentUser) {
+              throw new Error('Usuário não autenticado')
+            }
+
+            // Excluir conta e todos os dados
+            await deleteUserAccount(currentUser, password)
+
+            // Sucesso - mostrar mensagem e redirecionar
+            showToast(t('settings.deleteAccountSuccess'), 'success')
+            
+            // Fechar modal
+            setIsDeleteModalOpen(false)
+            
+            // Redirecionar para página inicial após um breve delay
+            setTimeout(() => {
+              router.push('/')
+            }, 1500)
+          } catch (error: any) {
+            console.error('Erro ao excluir conta:', error)
+            showToast(
+              error.message || t('settings.deleteAccountError'),
+              'error'
+            )
+          } finally {
+            setIsDeleting(false)
+          }
+        }}
+        isLoading={isDeleting}
+      />
     </>
   )
 }

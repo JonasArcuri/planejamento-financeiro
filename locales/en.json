@@ -155,7 +155,27 @@
     "theme": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "close": "Close"
+    "close": "Close",
+    "deleteAccount": "Delete Account",
+    "deleteAccountWarning": "Warning: This action is irreversible",
+    "deleteAccountIrreversible": "All your data will be permanently deleted and cannot be recovered.",
+    "deleteAccountWhatWillBeDeleted": "What will be deleted:",
+    "deleteAccountData1": "All registration data (name, email)",
+    "deleteAccountData2": "All financial transactions (income and expenses)",
+    "deleteAccountData3": "All financial goals and progress",
+    "deleteAccountData4": "Preferences and settings",
+    "deleteAccountData5": "Application usage history",
+    "deleteAccountConfirmationLabel": "Type \"{text}\" to confirm:",
+    "deleteAccountConfirmationHint": "This confirmation is required to prevent accidental deletions.",
+    "deleteAccountFinalWarning": "Make sure to export or backup any important information before proceeding.",
+    "deleteAccountConfirm": "Delete Account Permanently",
+    "deleteAccountButton": "Delete my account",
+    "deleteAccountDescription": "Permanently delete your account and all associated data. This action cannot be undone.",
+    "deleteAccountPasswordLabel": "Password (for confirmation)",
+    "deleteAccountPasswordPlaceholder": "Enter your password",
+    "deleteAccountPasswordHint": "Enter your current password to confirm deletion. Users who logged in with Google can leave blank.",
+    "deleteAccountSuccess": "Account deleted successfully",
+    "deleteAccountError": "Error deleting account. Please try again."
   }
 }
 

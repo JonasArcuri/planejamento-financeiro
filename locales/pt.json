@@ -155,7 +155,27 @@
     "theme": "Tema",
     "light": "Claro",
     "dark": "Escuro",
-    "close": "Fechar"
+    "close": "Fechar",
+    "deleteAccount": "Excluir Conta",
+    "deleteAccountWarning": "Atenção: Esta ação é irreversível",
+    "deleteAccountIrreversible": "Todos os seus dados serão permanentemente excluídos e não poderão ser recuperados.",
+    "deleteAccountWhatWillBeDeleted": "O que será excluído:",
+    "deleteAccountData1": "Todos os dados de cadastro (nome, e-mail)",
+    "deleteAccountData2": "Todas as transações financeiras (receitas e despesas)",
+    "deleteAccountData3": "Todas as metas financeiras e progresso",
+    "deleteAccountData4": "Preferências e configurações",
+    "deleteAccountData5": "Histórico de uso da aplicação",
+    "deleteAccountConfirmationLabel": "Digite \"{text}\" para confirmar:",
+    "deleteAccountConfirmationHint": "Esta confirmação é necessária para evitar exclusões acidentais.",
+    "deleteAccountFinalWarning": "Certifique-se de exportar ou fazer backup de qualquer informação importante antes de continuar.",
+    "deleteAccountConfirm": "Excluir Conta Permanentemente",
+    "deleteAccountButton": "Excluir minha conta",
+    "deleteAccountDescription": "Exclua permanentemente sua conta e todos os dados associados. Esta ação não pode ser desfeita.",
+    "deleteAccountPasswordLabel": "Senha (para confirmação)",
+    "deleteAccountPasswordPlaceholder": "Digite sua senha",
+    "deleteAccountPasswordHint": "Digite sua senha atual para confirmar a exclusão. Usuários que fizeram login com Google podem deixar em branco.",
+    "deleteAccountSuccess": "Conta excluída com sucesso",
+    "deleteAccountError": "Erro ao excluir conta. Tente novamente."
   }
 }
 
