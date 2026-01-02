@@ -6,11 +6,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Goal } from '@/types'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency } from '@/lib/currency'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 
 const addMoneySchema = z.object({
   amount: z
@@ -36,6 +37,7 @@ export default function AddMoneyModal({
   isLoading = false,
 }: AddMoneyModalProps) {
   const { t } = useLanguage()
+  const { currency } = useCurrency()
   const {
     register,
     handleSubmit,
@@ -72,11 +74,11 @@ export default function AddMoneyModal({
           </p>
           <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
             <span className="font-semibold">{t('goals.currentAmount')}:</span>{' '}
-            {formatCurrency(goal.currentAmount)}
+            {formatCurrency(goal.currentAmount, currency)}
           </p>
           <p className="text-sm text-gray-700 dark:text-gray-300">
             <span className="font-semibold">{t('goals.remainingAmount')}:</span>{' '}
-            {formatCurrency(maxAmount)}
+            {formatCurrency(maxAmount, currency)}
           </p>
         </div>
 
@@ -99,7 +101,7 @@ export default function AddMoneyModal({
                 valueAsNumber: true,
                 validate: (value) => {
                   if (value <= 0) return 'Valor deve ser maior que zero'
-                  if (value > maxAmount) return `Valor não pode exceder ${formatCurrency(maxAmount)}`
+                  if (value > maxAmount) return `Valor não pode exceder ${formatCurrency(maxAmount, currency)}`
                   return true
                 }
               })}

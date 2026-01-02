@@ -2,14 +2,16 @@
 // Design: Minimalista, Clean e Profissional
 import jsPDF from 'jspdf'
 import autoTable, { UserOptions } from 'jspdf-autotable'
-import { Transaction } from '@/types'
-import { formatCurrency, calculateTotalIncome, calculateTotalExpenses } from './utils'
+import { Transaction, Currency } from '@/types'
+import { calculateTotalIncome, calculateTotalExpenses } from './utils'
+import { formatCurrency } from './currency'
 
 interface GeneratePDFOptions {
   transactions: Transaction[]
   month: number // 1-12
   year: number
   userName: string
+  currency?: Currency // Moeda para formatação
 }
 
 /**
@@ -21,6 +23,7 @@ export function generateMonthlyPDF({
   month,
   year,
   userName,
+  currency = 'BRL',
 }: GeneratePDFOptions): void {
   // Criar instância do PDF (A4)
   const doc = new jsPDF({
@@ -104,7 +107,7 @@ export function generateMonthlyPDF({
   doc.setFontSize(11)
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(34, 197, 94) // Verde discreto
-  doc.text(formatCurrency(totalIncome), cardX, currentY + 6)
+  doc.text(formatCurrency(totalIncome, currency), cardX, currentY + 6)
 
   cardX += cardWidth + cardSpacing
 
@@ -117,7 +120,7 @@ export function generateMonthlyPDF({
   doc.setFontSize(11)
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(239, 68, 68) // Vermelho discreto
-  doc.text(formatCurrency(totalExpenses), cardX, currentY + 6)
+  doc.text(formatCurrency(totalExpenses, currency), cardX, currentY + 6)
 
   cardX += cardWidth + cardSpacing
 
@@ -134,7 +137,7 @@ export function generateMonthlyPDF({
   } else {
     doc.setTextColor(239, 68, 68) // Vermelho
   }
-  doc.text(formatCurrency(balance), cardX, currentY + 6)
+  doc.text(formatCurrency(balance, currency), cardX, currentY + 6)
 
   currentY += 15
 
@@ -181,7 +184,7 @@ export function generateMonthlyPDF({
       category = `Outros - ${transaction.customCategory}`
     }
 
-    const amount = formatCurrency(transaction.amount)
+    const amount = formatCurrency(transaction.amount, currency)
 
     return [formattedDate, type, category, amount]
   })

@@ -1,8 +1,9 @@
 'use client'
 
 // Componente de totais por categoria
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency } from '@/lib/currency'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 
 interface CategoryTotalsProps {
   data: Array<{
@@ -15,6 +16,7 @@ interface CategoryTotalsProps {
 
 export default function CategoryTotals({ data }: CategoryTotalsProps) {
   const { t } = useLanguage()
+  const { currency } = useCurrency()
   
   if (data.length === 0) {
     return (
@@ -40,12 +42,12 @@ export default function CategoryTotals({ data }: CategoryTotalsProps) {
               <div className="flex gap-4 mt-1 text-sm">
                 {item.income > 0 && (
                   <span className="text-green-600 dark:text-green-400">
-                    +{formatCurrency(item.income)}
+                    +{formatCurrency(item.income, currency)}
                   </span>
                 )}
                 {item.expense > 0 && (
                   <span className="text-red-600 dark:text-red-400">
-                    -{formatCurrency(item.expense)}
+                    -{formatCurrency(item.expense, currency)}
                   </span>
                 )}
               </div>
@@ -56,7 +58,7 @@ export default function CategoryTotals({ data }: CategoryTotalsProps) {
                   item.total >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                 }`}
               >
-                {formatCurrency(item.total)}
+                {formatCurrency(item.total, currency)}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.balance')}</p>
             </div>

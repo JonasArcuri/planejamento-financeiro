@@ -153,6 +153,10 @@
     "title": "Settings",
     "language": "Language",
     "theme": "Theme",
+    "currency": "Currency",
+    "currencyBRL": "Brazilian Real (R$)",
+    "currencyUSD": "US Dollar ($)",
+    "currencyWarning": "Changing currency does not convert existing values. It only changes the display format.",
     "light": "Light",
     "dark": "Dark",
     "close": "Close",
@@ -176,6 +180,122 @@
     "deleteAccountPasswordHint": "Enter your current password to confirm deletion. Users who logged in with Google can leave blank.",
     "deleteAccountSuccess": "Account deleted successfully",
     "deleteAccountError": "Error deleting account. Please try again."
+  },
+  "landing": {
+    "nav": {
+      "appName": "Financial Planning",
+      "login": "Login",
+      "getStarted": "Get Started Free"
+    },
+    "hero": {
+      "headline": "Control your {highlight} simply",
+      "highlight": "personal finances",
+      "subheadline": "Manage income, expenses, and financial goals in one place. Make smart decisions about your money with clear visualizations and practical insights.",
+      "ctaPrimary": "Get Started Free",
+      "ctaSecondary": "View Premium Plans",
+      "trustBadge": "✨ No credit card required • Free trial • Cancel anytime",
+      "balanceCard": {
+        "title": "Monthly Balance",
+        "value": "$2,450.00",
+        "change": "+15% compared to previous month",
+        "income": "Income",
+        "incomeValue": "$5,000.00",
+        "expenses": "Expenses",
+        "expensesValue": "$2,550.00",
+        "goalReached": "Goal reached!"
+      }
+    },
+    "benefits": {
+      "title": "Everything you need to {highlight}",
+      "highlight": "control your money",
+      "subtitle": "Powerful and easy-to-use features to transform your relationship with money",
+      "items": {
+        "dashboard": {
+          "title": "Intuitive Dashboard",
+          "description": "View all your finances in one place with clear charts and real-time statistics."
+        },
+        "control": {
+          "title": "Full Control",
+          "description": "Easily record income and expenses, organize by categories, and track your monthly cash flow."
+        },
+        "goals": {
+          "title": "Financial Goals",
+          "description": "Set and track your savings goals with progress bars and smart alerts."
+        },
+        "analytics": {
+          "title": "Advanced Analytics",
+          "description": "Compare months, identify spending patterns, and receive alerts about above-average expenses."
+        },
+        "security": {
+          "title": "100% Secure",
+          "description": "Your data is protected with state-of-the-art encryption and you have full control over your information."
+        },
+        "mobile": {
+          "title": "Mobile-First",
+          "description": "Access from any device. Responsive interface optimized for mobile, tablet, and desktop."
+        }
+      }
+    },
+    "screenshots": {
+      "title": "See how {highlight} it is",
+      "highlight": "easy to use",
+      "subtitle": "Intuitive interface and clear visualizations to help you make smart financial decisions",
+      "items": {
+        "charts": {
+          "title": "Interactive Charts",
+          "description": "Visualize expenses by category and compare income vs expenses over months with clear and intuitive charts",
+          "clickToZoom": "Click image to zoom",
+          "alt": "Dashboard with expense charts by category and income vs expenses"
+        },
+        "overview": {
+          "title": "Quick Overview",
+          "description": "Track your monthly balance, total income and expenses in visual and easy-to-understand cards",
+          "clickToZoom": "Click image to zoom",
+          "alt": "Dashboard with balance, income and expense cards"
+        },
+        "goals": {
+          "title": "Savings Goals",
+          "description": "Set goals, track progress with visual bars and achieve your financial objectives",
+          "clickToZoom": "Click image to zoom",
+          "alt": "Financial goals page with progress tracking"
+        }
+      },
+      "modal": {
+        "close": "Close",
+        "alt": "Enlarged image"
+      }
+    },
+    "pricing": {
+      "title": "Start controlling your finances today",
+      "subtitle": "Free plan with essential features. Upgrade to Premium and unlock advanced analytics and unlimited resources.",
+      "ctaPrimary": "Get Started Free",
+      "ctaSecondary": "View Premium Plans",
+      "trustBadge": "✨ No commitment • Cancel anytime"
+    },
+    "footer": {
+      "brand": "💰 Finances",
+      "description": "Control your personal finances simply and efficiently.",
+      "quickLinks": {
+        "title": "Quick Links",
+        "login": "Login",
+        "signup": "Sign Up",
+        "premium": "Premium Plans"
+      },
+      "features": {
+        "title": "Features",
+        "dashboard": "Intuitive Dashboard",
+        "goals": "Financial Goals",
+        "analytics": "Advanced Analytics",
+        "security": "100% Secure"
+      },
+      "copyright": "© 2025 Financial Planning. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use"
+    },
+    "seo": {
+      "title": "Personal Financial Planning | Control Your Finances",
+      "description": "Manage income, expenses, and financial goals in one place. Intuitive dashboard, advanced analytics, and 100% secure."
+    }
   }
 }
 

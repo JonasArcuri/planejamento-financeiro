@@ -10,11 +10,13 @@ import MonthYearFilter from '@/components/reports/MonthYearFilter'
 import Button from '@/components/ui/Button'
 import SettingsButton from '@/components/ui/SettingsButton'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 import { useRouter } from 'next/navigation'
 import { logout } from '@/services/firebase/auth'
 import Loading from '@/components/Loading'
 import { generateMonthlyPDF } from '@/lib/pdfGenerator'
-import { formatCurrency, calculateTotalIncome, calculateTotalExpenses } from '@/lib/utils'
+import { calculateTotalIncome, calculateTotalExpenses } from '@/lib/utils'
+import { formatCurrency } from '@/lib/currency'
 
 export default function ReportsPage() {
   const { user, userData } = useAuth()
@@ -22,6 +24,7 @@ export default function ReportsPage() {
   const { showToast } = useToast()
   const router = useRouter()
   const { t } = useLanguage()
+  const { currency } = useCurrency()
 
   const now = new Date()
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1)
@@ -70,6 +73,7 @@ export default function ReportsPage() {
         month: selectedMonth,
         year: selectedYear,
         userName,
+        currency,
       })
 
       showToast('Relatório PDF gerado com sucesso!', 'success')
@@ -281,7 +285,7 @@ export default function ReportsPage() {
                         }`}
                       >
                         {transaction.type === 'income' ? '+' : '-'}
-                        {formatCurrency(transaction.amount)}
+                        {formatCurrency(transaction.amount, currency)}
                       </p>
                     </div>
                   )

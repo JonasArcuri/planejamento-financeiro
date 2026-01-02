@@ -2,11 +2,12 @@
 
 // Resumo de metas no dashboard
 import { Goal, Transaction } from '@/types'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency } from '@/lib/currency'
 import { calculateGoalProgress, getDaysRemaining } from '@/lib/goals'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 
 interface GoalsSummaryProps {
   goals: Goal[]
@@ -16,6 +17,7 @@ interface GoalsSummaryProps {
 export default function GoalsSummary({ goals, transactions }: GoalsSummaryProps) {
   const router = useRouter()
   const { t } = useLanguage()
+  const { currency } = useCurrency()
 
   if (goals.length === 0) {
     return (
@@ -82,7 +84,7 @@ export default function GoalsSummary({ goals, transactions }: GoalsSummaryProps)
                   <div className="flex-1">
                     <h4 className="font-medium text-gray-900 dark:text-white">{goal.title}</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {formatCurrency(progress.currentAmount)} / {formatCurrency(goal.targetAmount)}
+                      {formatCurrency(progress.currentAmount, currency)} / {formatCurrency(goal.targetAmount, currency)}
                     </p>
                   </div>
                   <span className="text-sm font-semibold text-primary-600 dark:text-primary-400">

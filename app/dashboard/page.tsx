@@ -23,8 +23,8 @@ import { useGoals } from '@/hooks/useGoals'
 import GoalsSummary from '@/components/dashboard/GoalsSummary'
 import SettingsButton from '@/components/ui/SettingsButton'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 import {
-  formatCurrency,
   getCurrentMonthTransactions,
   getPreviousMonthTransactions,
   calculateTotalIncome,
@@ -36,6 +36,7 @@ import {
   compareMonths,
   identifyHighExpenses,
 } from '@/lib/utils'
+import { formatCurrency } from '@/lib/currency'
 
 function DashboardContent() {
   const { user, userData } = useAuth()
@@ -46,6 +47,7 @@ function DashboardContent() {
   const searchParams = useSearchParams()
   const { showToast } = useToast()
   const { t } = useLanguage()
+  const { currency } = useCurrency()
 
   // Verificar se veio do checkout e recarregar dados do usuário
   useEffect(() => {
@@ -220,7 +222,7 @@ function DashboardContent() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <StatCard
               title={t('dashboard.balance')}
-              value={formatCurrency(balance)}
+              value={formatCurrency(balance, currency)}
               variant="balance"
               icon={
                 <svg
@@ -240,7 +242,7 @@ function DashboardContent() {
             />
             <StatCard
               title={t('dashboard.totalIncome')}
-              value={formatCurrency(totalIncome)}
+              value={formatCurrency(totalIncome, currency)}
               variant="income"
               icon={
                 <svg
@@ -260,7 +262,7 @@ function DashboardContent() {
             />
             <StatCard
               title={t('dashboard.totalExpenses')}
-              value={formatCurrency(totalExpenses)}
+              value={formatCurrency(totalExpenses, currency)}
               variant="expense"
               icon={
                 <svg

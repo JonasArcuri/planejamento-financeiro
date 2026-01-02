@@ -2,9 +2,10 @@
 
 // Lista de transações
 import { Transaction } from '@/types'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency } from '@/lib/currency'
 import Button from '@/components/ui/Button'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 
 interface TransactionListProps {
   transactions: Transaction[]
@@ -20,6 +21,7 @@ export default function TransactionList({
   isLoading = false,
 }: TransactionListProps) {
   const { t, language } = useLanguage()
+  const { currency } = useCurrency()
   
   if (isLoading) {
     return (
@@ -85,7 +87,7 @@ export default function TransactionList({
                 `}
               >
                 {transaction.type === 'income' ? '+' : '-'}
-                {formatCurrency(transaction.amount)}
+                {formatCurrency(transaction.amount, currency)}
               </p>
               <div className="flex gap-2">
                 <Button

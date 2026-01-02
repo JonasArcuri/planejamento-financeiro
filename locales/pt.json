@@ -153,6 +153,10 @@
     "title": "Configurações",
     "language": "Idioma",
     "theme": "Tema",
+    "currency": "Moeda",
+    "currencyBRL": "Real Brasileiro (R$)",
+    "currencyUSD": "Dólar Americano ($)",
+    "currencyWarning": "A troca de moeda não converte valores já cadastrados. Apenas altera a exibição.",
     "light": "Claro",
     "dark": "Escuro",
     "close": "Fechar",
@@ -176,6 +180,122 @@
     "deleteAccountPasswordHint": "Digite sua senha atual para confirmar a exclusão. Usuários que fizeram login com Google podem deixar em branco.",
     "deleteAccountSuccess": "Conta excluída com sucesso",
     "deleteAccountError": "Erro ao excluir conta. Tente novamente."
+  },
+  "landing": {
+    "nav": {
+      "appName": "Planejamento Finanças",
+      "login": "Entrar",
+      "getStarted": "Começar Grátis"
+    },
+    "hero": {
+      "headline": "Controle suas {highlight} de forma simples",
+      "highlight": "finanças pessoais",
+      "subheadline": "Gerencie receitas, despesas e metas financeiras em um só lugar. Tome decisões inteligentes sobre seu dinheiro com visualizações claras e insights práticos.",
+      "ctaPrimary": "Começar Grátis",
+      "ctaSecondary": "Ver Planos Premium",
+      "trustBadge": "✨ Sem cartão de crédito • Teste grátis • Cancele quando quiser",
+      "balanceCard": {
+        "title": "Saldo do Mês",
+        "value": "R$ 2.450,00",
+        "change": "+15% em relação ao mês anterior",
+        "income": "Receitas",
+        "incomeValue": "R$ 5.000,00",
+        "expenses": "Despesas",
+        "expensesValue": "R$ 2.550,00",
+        "goalReached": "Meta alcançada!"
+      }
+    },
+    "benefits": {
+      "title": "Tudo que você precisa para {highlight}",
+      "highlight": "controlar seu dinheiro",
+      "subtitle": "Funcionalidades poderosas e fáceis de usar para transformar sua relação com o dinheiro",
+      "items": {
+        "dashboard": {
+          "title": "Dashboard Intuitivo",
+          "description": "Visualize todas as suas finanças em um só lugar com gráficos claros e estatísticas em tempo real."
+        },
+        "control": {
+          "title": "Controle Total",
+          "description": "Registre receitas e despesas facilmente, organize por categorias e acompanhe seu fluxo de caixa mensal."
+        },
+        "goals": {
+          "title": "Metas Financeiras",
+          "description": "Defina e acompanhe suas metas de poupança com barras de progresso e alertas inteligentes."
+        },
+        "analytics": {
+          "title": "Análises Avançadas",
+          "description": "Compare meses, identifique padrões de gastos e receba alertas sobre despesas acima da média."
+        },
+        "security": {
+          "title": "100% Seguro",
+          "description": "Seus dados são protegidos com criptografia de ponta e você controla totalmente suas informações."
+        },
+        "mobile": {
+          "title": "Mobile-First",
+          "description": "Acesse de qualquer dispositivo. Interface responsiva e otimizada para celular, tablet e desktop."
+        }
+      }
+    },
+    "screenshots": {
+      "title": "Veja como é {highlight}",
+      "highlight": "fácil de usar",
+      "subtitle": "Interface intuitiva e visualizações claras para você tomar decisões financeiras inteligentes",
+      "items": {
+        "charts": {
+          "title": "Gráficos Interativos",
+          "description": "Visualize despesas por categoria e compare receitas vs despesas ao longo dos meses com gráficos claros e intuitivos",
+          "clickToZoom": "Clique na imagem para ampliar",
+          "alt": "Dashboard com gráficos de despesas por categoria e receitas vs despesas"
+        },
+        "overview": {
+          "title": "Visão Geral Rápida",
+          "description": "Acompanhe seu saldo mensal, total de receitas e despesas em cards visuais e fáceis de entender",
+          "clickToZoom": "Clique na imagem para ampliar",
+          "alt": "Dashboard com cards de saldo, receitas e despesas"
+        },
+        "goals": {
+          "title": "Metas de Poupança",
+          "description": "Defina metas, acompanhe o progresso com barras visuais e alcance seus objetivos financeiros",
+          "clickToZoom": "Clique na imagem para ampliar",
+          "alt": "Página de metas financeiras com acompanhamento de progresso"
+        }
+      },
+      "modal": {
+        "close": "Fechar",
+        "alt": "Imagem ampliada"
+      }
+    },
+    "pricing": {
+      "title": "Comece a controlar suas finanças hoje",
+      "subtitle": "Plano gratuito com funcionalidades essenciais. Upgrade para Premium e desbloqueie análises avançadas e recursos ilimitados.",
+      "ctaPrimary": "Começar Grátis",
+      "ctaSecondary": "Ver Planos Premium",
+      "trustBadge": "✨ Sem compromisso • Cancele quando quiser"
+    },
+    "footer": {
+      "brand": "💰 Finanças",
+      "description": "Controle suas finanças pessoais de forma simples e eficiente.",
+      "quickLinks": {
+        "title": "Links Rápidos",
+        "login": "Entrar",
+        "signup": "Cadastrar",
+        "premium": "Planos Premium"
+      },
+      "features": {
+        "title": "Recursos",
+        "dashboard": "Dashboard Intuitivo",
+        "goals": "Metas Financeiras",
+        "analytics": "Análises Avançadas",
+        "security": "100% Seguro"
+      },
+      "copyright": "© 2025 Planejamento Finanças. Todos os direitos reservados.",
+      "privacy": "Política de Privacidade",
+      "terms": "Termos de Uso"
+    },
+    "seo": {
+      "title": "Planejamento Financeiro Pessoal | Controle suas Finanças",
+      "description": "Gerencie receitas, despesas e metas financeiras em um só lugar. Dashboard intuitivo, análises avançadas e 100% seguro."
+    }
   }
 }
 

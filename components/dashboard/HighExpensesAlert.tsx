@@ -2,7 +2,8 @@
 
 // Componente de alerta para gastos altos
 import { Transaction } from '@/types'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency } from '@/lib/currency'
+import { useCurrency } from '@/contexts/CurrencyContext'
 
 interface HighExpensesAlertProps {
   highExpenses: Array<{
@@ -13,6 +14,7 @@ interface HighExpensesAlertProps {
 }
 
 export default function HighExpensesAlert({ highExpenses }: HighExpensesAlertProps) {
+  const { currency } = useCurrency()
   const expenses = highExpenses.filter((item) => item.isHigh)
 
   if (expenses.length === 0) {
@@ -69,7 +71,7 @@ export default function HighExpensesAlert({ highExpenses }: HighExpensesAlertPro
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-orange-600">
-                    {formatCurrency(item.transaction.amount)}
+                    {formatCurrency(item.transaction.amount, currency)}
                   </p>
                   <p className="text-xs text-orange-500">
                     {item.percentage}% da média

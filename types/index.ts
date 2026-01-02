@@ -5,10 +5,12 @@ export type TransactionType = 'income' | 'expense'
 export type UserPlan = 'free' | 'premium'
 export type Theme = 'light' | 'dark'
 export type Language = 'pt' | 'en'
+export type Currency = 'BRL' | 'USD'
 
 export interface UserPreferences {
   theme?: Theme
   language?: Language
+  currency?: Currency
 }
 
 export interface User {

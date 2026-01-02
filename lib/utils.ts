@@ -1,14 +1,15 @@
 // Funções utilitárias para cálculos e formatação
 import { Transaction } from '@/types'
+import { formatCurrency as formatCurrencyWithCurrency, getDefaultCurrency } from './currency'
 
 /**
  * Formatar valor monetário
+ * 
+ * @deprecated Use formatCurrency from '@/lib/currency' com o hook useCurrency para obter a moeda do usuário
+ * Esta função mantém compatibilidade retornando BRL por padrão
  */
 export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  }).format(value)
+  return formatCurrencyWithCurrency(value, getDefaultCurrency())
 }
 
 /**

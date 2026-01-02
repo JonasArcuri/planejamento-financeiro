@@ -2,11 +2,12 @@
 
 // Card de meta financeira com barra de progresso
 import { Goal } from '@/types'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency } from '@/lib/currency'
 import { calculateGoalProgress, getDaysRemaining, isGoalOverdue, isGoalNearDeadline } from '@/lib/goals'
 import { Transaction } from '@/types'
 import Button from '@/components/ui/Button'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 
 interface GoalCardProps {
   goal: Goal
@@ -24,6 +25,7 @@ export default function GoalCard({
   onAddMoney,
 }: GoalCardProps) {
   const { t } = useLanguage()
+  const { currency } = useCurrency()
   const progress = calculateGoalProgress(goal, transactions)
   const daysRemaining = getDaysRemaining(goal.deadline)
   const isOverdue = isGoalOverdue(goal.deadline)
@@ -111,11 +113,11 @@ export default function GoalCard({
           <div>
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('goals.progress')}</p>
             <p className="text-lg font-bold text-gray-900 dark:text-white">
-              {formatCurrency(progress.currentAmount)} / {formatCurrency(goal.targetAmount)}
+              {formatCurrency(progress.currentAmount, currency)} / {formatCurrency(goal.targetAmount, currency)}
             </p>
             {progress.incomeContribution > 0 && (
               <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                +{formatCurrency(progress.incomeContribution)} {t('transactions.income')}
+                +{formatCurrency(progress.incomeContribution, currency)} {t('transactions.income')}
               </p>
             )}
           </div>
@@ -136,7 +138,7 @@ export default function GoalCard({
         </div>
         {progress.remaining > 0 && !progress.isCompleted && (
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            {t('goals.remaining')} {formatCurrency(progress.remaining)} {t('goals.toReachGoal')}
+            {t('goals.remaining')} {formatCurrency(progress.remaining, currency)} {t('goals.toReachGoal')}
           </p>
         )}
         {progress.isCompleted && (

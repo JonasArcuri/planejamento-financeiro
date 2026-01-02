@@ -47,12 +47,28 @@ export function LanguageProvider({
 
     if (savedLanguage && (savedLanguage === 'pt' || savedLanguage === 'en')) {
       setLanguageState(savedLanguage)
+      // Atualizar atributo lang do HTML
+      if (typeof document !== 'undefined') {
+        document.documentElement.lang = savedLanguage === 'pt' ? 'pt-BR' : 'en-US'
+      }
       return
     }
 
-    // 2. Se não houver no localStorage e não houver initialLanguage, usar português como padrão
-    if (!initialLanguage) {
-      setLanguageState('pt')
+    // 2. Se não houver no localStorage, detectar idioma do navegador
+    if (!initialLanguage && typeof window !== 'undefined') {
+      const browserLanguage = navigator.language || (navigator as any).userLanguage
+      const detectedLanguage: Language = browserLanguage.startsWith('en') ? 'en' : 'pt'
+      setLanguageState(detectedLanguage)
+      // Atualizar atributo lang do HTML
+      document.documentElement.lang = detectedLanguage === 'pt' ? 'pt-BR' : 'en-US'
+      // Salvar no localStorage para próxima vez
+      localStorage.setItem('language', detectedLanguage)
+    } else if (initialLanguage) {
+      setLanguageState(initialLanguage)
+      // Atualizar atributo lang do HTML
+      if (typeof document !== 'undefined') {
+        document.documentElement.lang = initialLanguage === 'pt' ? 'pt-BR' : 'en-US'
+      }
     }
   }, [initialLanguage])
 
@@ -87,6 +103,11 @@ export function LanguageProvider({
     
     // Salvar no localStorage
     localStorage.setItem('language', newLanguage)
+
+    // Atualizar atributo lang do HTML para SEO
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = newLanguage === 'pt' ? 'pt-BR' : 'en-US'
+    }
 
     // Salvar no Firestore se houver userId
     if (userId) {

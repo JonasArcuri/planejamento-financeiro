@@ -1,11 +1,13 @@
 'use client'
 
-// Wrapper client-side para ThemeProvider e LanguageProvider
+// Wrapper client-side para ThemeProvider, LanguageProvider e CurrencyProvider
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import { LanguageProvider } from '@/contexts/LanguageContext'
+import { CurrencyProvider } from '@/contexts/CurrencyContext'
 import { useAuth } from '@/hooks/useAuth'
-import { Theme, Language } from '@/types'
+import { Theme, Language, Currency } from '@/types'
 import { useEffect, useState } from 'react'
+import { getDefaultCurrency } from '@/lib/currency'
 
 export default function ThemeProviderWrapper({
   children,
@@ -15,6 +17,7 @@ export default function ThemeProviderWrapper({
   const { user, userData } = useAuth()
   const [initialTheme, setInitialTheme] = useState<Theme | undefined>(undefined)
   const [initialLanguage, setInitialLanguage] = useState<Language | undefined>(undefined)
+  const [initialCurrency, setInitialCurrency] = useState<Currency | undefined>(undefined)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -50,6 +53,21 @@ export default function ThemeProviderWrapper({
         setInitialLanguage('pt')
       }
     }
+
+    // Carregar moeda inicial
+    // 1. Tentar do Firestore (se houver userData)
+    if (userData?.preferences?.currency) {
+      setInitialCurrency(userData.preferences.currency)
+    } else {
+      // 2. Tentar do localStorage
+      const savedCurrency = localStorage.getItem('currency') as Currency | null
+      if (savedCurrency && (savedCurrency === 'BRL' || savedCurrency === 'USD')) {
+        setInitialCurrency(savedCurrency)
+      } else {
+        // 3. Usar BRL como padrão
+        setInitialCurrency(getDefaultCurrency())
+      }
+    }
   }, [userData])
 
   // Sempre renderizar os providers, mesmo durante SSR
@@ -57,7 +75,9 @@ export default function ThemeProviderWrapper({
   return (
     <LanguageProvider userId={user?.uid || null} initialLanguage={initialLanguage || 'pt'}>
       <ThemeProvider userId={user?.uid || null} initialTheme={initialTheme || 'light'}>
-        {children}
+        <CurrencyProvider userId={user?.uid || null} initialCurrency={initialCurrency || getDefaultCurrency()}>
+          {children}
+        </CurrencyProvider>
       </ThemeProvider>
     </LanguageProvider>
   )

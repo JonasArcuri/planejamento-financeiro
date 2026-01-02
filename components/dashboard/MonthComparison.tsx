@@ -1,8 +1,9 @@
 'use client'
 
 // Componente de comparação mês atual vs mês anterior
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency } from '@/lib/currency'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 
 interface MonthComparisonProps {
   current: {
@@ -34,6 +35,7 @@ export default function MonthComparison({
   percent,
 }: MonthComparisonProps) {
   const { t } = useLanguage()
+  const { currency } = useCurrency()
   
   const formatPercent = (value: number) => {
     const sign = value >= 0 ? '+' : ''
@@ -78,11 +80,11 @@ export default function MonthComparison({
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-300">{t('transactions.income')}</p>
             <p className="text-lg font-semibold text-green-700 dark:text-green-400">
-              {formatCurrency(current.income)}
+              {formatCurrency(current.income, currency)}
             </p>
             {previous.income > 0 && (
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Mês anterior: {formatCurrency(previous.income)}
+                Mês anterior: {formatCurrency(previous.income, currency)}
               </p>
             )}
           </div>
@@ -99,11 +101,11 @@ export default function MonthComparison({
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-300">{t('transactions.expense')}</p>
             <p className="text-lg font-semibold text-red-700 dark:text-red-400">
-              {formatCurrency(current.expense)}
+              {formatCurrency(current.expense, currency)}
             </p>
             {previous.expense > 0 && (
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Mês anterior: {formatCurrency(previous.expense)}
+                Mês anterior: {formatCurrency(previous.expense, currency)}
               </p>
             )}
           </div>
@@ -124,11 +126,11 @@ export default function MonthComparison({
             <p className={`text-lg font-semibold ${
               current.balance >= 0 ? 'text-blue-700 dark:text-blue-400' : 'text-orange-700 dark:text-orange-400'
             }`}>
-              {formatCurrency(current.balance)}
+              {formatCurrency(current.balance, currency)}
             </p>
             {previous.balance !== 0 && (
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Mês anterior: {formatCurrency(previous.balance)}
+                Mês anterior: {formatCurrency(previous.balance, currency)}
               </p>
             )}
           </div>

@@ -3,13 +3,16 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
+import { useLanguage } from '@/contexts/LanguageContext'
 import Button from '@/components/ui/Button'
 import Loading from '@/components/Loading'
 import Link from 'next/link'
 import Image from 'next/image'
+import LanguageSelector from '@/components/landing/LanguageSelector'
 
 export default function LandingPage() {
   const { user, loading } = useAuth()
+  const { t } = useLanguage()
   const router = useRouter()
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
@@ -69,18 +72,19 @@ export default function LandingPage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-primary-600">
-                Planejamento Finanças
+                {t('landing.nav.appName')}
               </h1>
             </div>
             <div className="flex items-center gap-4">
+              <LanguageSelector />
               <Link
                 href="/login"
                 className="text-gray-700 hover:text-primary-600 font-medium"
               >
-                Entrar
+                {t('landing.nav.login')}
               </Link>
               <Button variant="primary" onClick={handleGetStarted}>
-                Começar Grátis
+                {t('landing.nav.getStarted')}
               </Button>
             </div>
           </div>
@@ -93,14 +97,12 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Controle suas{' '}
-                <span className="text-primary-600">finanças pessoais</span> de
-                forma simples
+                {t('landing.hero.headline').split('{highlight}')[0]}
+                <span className="text-primary-600">{t('landing.hero.highlight')}</span>
+                {t('landing.hero.headline').split('{highlight}')[1]}
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Gerencie receitas, despesas e metas financeiras em um só lugar.
-                Tome decisões inteligentes sobre seu dinheiro com visualizações
-                claras e insights práticos.
+                {t('landing.hero.subheadline')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
@@ -109,7 +111,7 @@ export default function LandingPage() {
                   onClick={handleGetStarted}
                   className="text-lg px-8 py-4"
                 >
-                  Começar Grátis
+                  {t('landing.hero.ctaPrimary')}
                 </Button>
                 <Button
                   variant="outline"
@@ -117,18 +119,18 @@ export default function LandingPage() {
                   onClick={handleUpgrade}
                   className="text-lg px-8 py-4"
                 >
-                  Ver Planos Premium
+                  {t('landing.hero.ctaSecondary')}
                 </Button>
               </div>
               <p className="text-sm text-gray-500 mt-4">
-                ✨ Sem cartão de crédito • Teste grátis • Cancele quando quiser
+                {t('landing.hero.trustBadge')}
               </p>
             </div>
             <div className="relative">
               <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
                 <div className="bg-gradient-to-br from-primary-500 to-purple-600 rounded-lg p-6 text-white">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">Saldo do Mês</h3>
+                    <h3 className="text-lg font-semibold">{t('landing.hero.balanceCard.title')}</h3>
                     <svg
                       className="w-6 h-6"
                       fill="none"
@@ -143,22 +145,22 @@ export default function LandingPage() {
                       />
                     </svg>
                   </div>
-                  <p className="text-4xl font-bold">R$ 2.450,00</p>
+                  <p className="text-4xl font-bold">{t('landing.hero.balanceCard.value')}</p>
                   <p className="text-primary-100 text-sm mt-2">
-                    +15% em relação ao mês anterior
+                    {t('landing.hero.balanceCard.change')}
                   </p>
                 </div>
                 <div className="mt-6 space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Receitas</span>
+                    <span className="text-gray-600">{t('landing.hero.balanceCard.income')}</span>
                     <span className="font-semibold text-green-600">
-                      R$ 5.000,00
+                      {t('landing.hero.balanceCard.incomeValue')}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Despesas</span>
+                    <span className="text-gray-600">{t('landing.hero.balanceCard.expenses')}</span>
                     <span className="font-semibold text-red-600">
-                      R$ 2.550,00
+                      {t('landing.hero.balanceCard.expensesValue')}
                     </span>
                   </div>
                 </div>
@@ -167,7 +169,7 @@ export default function LandingPage() {
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   <span className="text-sm font-medium text-gray-700">
-                    Meta alcançada!
+                    {t('landing.hero.balanceCard.goalReached')}
                   </span>
                 </div>
               </div>
@@ -181,12 +183,11 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Tudo que você precisa para{' '}
-              <span className="text-primary-600">controlar seu dinheiro</span>
+              {t('landing.benefits.title').split('{highlight}')[0]}
+              <span className="text-primary-600">{t('landing.benefits.highlight')}</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Funcionalidades poderosas e fáceis de usar para transformar sua
-              relação com o dinheiro
+              {t('landing.benefits.subtitle')}
             </p>
           </div>
 
@@ -209,11 +210,10 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Dashboard Intuitivo
+                {t('landing.benefits.items.dashboard.title')}
               </h3>
               <p className="text-gray-600">
-                Visualize todas as suas finanças em um só lugar com gráficos
-                claros e estatísticas em tempo real.
+                {t('landing.benefits.items.dashboard.description')}
               </p>
             </div>
 
@@ -235,11 +235,10 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Controle Total
+                {t('landing.benefits.items.control.title')}
               </h3>
               <p className="text-gray-600">
-                Registre receitas e despesas facilmente, organize por
-                categorias e acompanhe seu fluxo de caixa mensal.
+                {t('landing.benefits.items.control.description')}
               </p>
             </div>
 
@@ -261,11 +260,10 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Metas Financeiras
+                {t('landing.benefits.items.goals.title')}
               </h3>
               <p className="text-gray-600">
-                Defina e acompanhe suas metas de poupança com barras de
-                progresso e alertas inteligentes.
+                {t('landing.benefits.items.goals.description')}
               </p>
             </div>
 
@@ -287,11 +285,10 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Análises Avançadas
+                {t('landing.benefits.items.analytics.title')}
               </h3>
               <p className="text-gray-600">
-                Compare meses, identifique padrões de gastos e receba alertas
-                sobre despesas acima da média.
+                {t('landing.benefits.items.analytics.description')}
               </p>
             </div>
 
@@ -313,11 +310,10 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                100% Seguro
+                {t('landing.benefits.items.security.title')}
               </h3>
               <p className="text-gray-600">
-                Seus dados são protegidos com criptografia de ponta e você
-                controla totalmente suas informações.
+                {t('landing.benefits.items.security.description')}
               </p>
             </div>
 
@@ -339,11 +335,10 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Mobile-First
+                {t('landing.benefits.items.mobile.title')}
               </h3>
               <p className="text-gray-600">
-                Acesse de qualquer dispositivo. Interface responsiva e otimizada
-                para celular, tablet e desktop.
+                {t('landing.benefits.items.mobile.description')}
               </p>
             </div>
           </div>
@@ -355,12 +350,11 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Veja como é{' '}
-              <span className="text-primary-600">fácil de usar</span>
+              {t('landing.screenshots.title').split('{highlight}')[0]}
+              <span className="text-primary-600">{t('landing.screenshots.highlight')}</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Interface intuitiva e visualizações claras para você tomar
-              decisões financeiras inteligentes
+              {t('landing.screenshots.subtitle')}
             </p>
           </div>
 
@@ -374,7 +368,7 @@ export default function LandingPage() {
                 <div className="relative w-full h-64 rounded-lg overflow-hidden">
                   <Image
                     src="/images/Screenshot_1.jpg"
-                    alt="Dashboard com gráficos de despesas por categoria e receitas vs despesas"
+                    alt={t('landing.screenshots.items.charts.alt')}
                     fill
                     className="object-contain group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -397,14 +391,13 @@ export default function LandingPage() {
                 </div>
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Gráficos Interativos
+                {t('landing.screenshots.items.charts.title')}
               </h3>
               <p className="text-gray-600 text-sm">
-                Visualize despesas por categoria e compare receitas vs despesas
-                ao longo dos meses com gráficos claros e intuitivos
+                {t('landing.screenshots.items.charts.description')}
               </p>
               <p className="text-xs text-primary-600 mt-2 font-medium">
-                Clique na imagem para ampliar
+                {t('landing.screenshots.items.charts.clickToZoom')}
               </p>
             </div>
 
@@ -417,7 +410,7 @@ export default function LandingPage() {
                 <div className="relative w-full h-64 rounded-lg overflow-hidden">
                   <Image
                     src="/images/Screenshot_2.jpg"
-                    alt="Dashboard com cards de saldo, receitas e despesas"
+                    alt={t('landing.screenshots.items.overview.alt')}
                     fill
                     className="object-contain group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -440,14 +433,13 @@ export default function LandingPage() {
                 </div>
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Visão Geral Rápida
+                {t('landing.screenshots.items.overview.title')}
               </h3>
               <p className="text-gray-600 text-sm">
-                Acompanhe seu saldo mensal, total de receitas e despesas em
-                cards visuais e fáceis de entender
+                {t('landing.screenshots.items.overview.description')}
               </p>
               <p className="text-xs text-primary-600 mt-2 font-medium">
-                Clique na imagem para ampliar
+                {t('landing.screenshots.items.overview.clickToZoom')}
               </p>
             </div>
 
@@ -460,7 +452,7 @@ export default function LandingPage() {
                 <div className="relative w-full h-64 rounded-lg overflow-hidden">
                   <Image
                     src="/images/Screenshot_3.jpg"
-                    alt="Página de metas financeiras com acompanhamento de progresso"
+                    alt={t('landing.screenshots.items.goals.alt')}
                     fill
                     className="object-contain group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -483,14 +475,13 @@ export default function LandingPage() {
                 </div>
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Metas de Poupança
+                {t('landing.screenshots.items.goals.title')}
               </h3>
               <p className="text-gray-600 text-sm">
-                Defina metas, acompanhe o progresso com barras visuais e
-                alcance seus objetivos financeiros
+                {t('landing.screenshots.items.goals.description')}
               </p>
               <p className="text-xs text-primary-600 mt-2 font-medium">
-                Clique na imagem para ampliar
+                {t('landing.screenshots.items.goals.clickToZoom')}
               </p>
             </div>
           </div>
@@ -505,7 +496,7 @@ export default function LandingPage() {
                 <button
                   onClick={handleCloseModal}
                   className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors shadow-lg"
-                  aria-label="Fechar"
+                  aria-label={t('landing.screenshots.modal.close')}
                 >
                   <svg
                     className="w-6 h-6 text-gray-700"
@@ -527,7 +518,7 @@ export default function LandingPage() {
                 >
                   <Image
                     src={selectedImage}
-                    alt="Imagem ampliada"
+                    alt={t('landing.screenshots.modal.alt')}
                     fill
                     className="object-contain rounded-lg"
                     sizes="90vw"
@@ -544,11 +535,10 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-primary-600 to-purple-600 rounded-2xl p-12 text-center text-white shadow-2xl">
             <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-              Comece a controlar suas finanças hoje
+              {t('landing.pricing.title')}
             </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-              Plano gratuito com funcionalidades essenciais. Upgrade para
-              Premium e desbloqueie análises avançadas e recursos ilimitados.
+              {t('landing.pricing.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -557,7 +547,7 @@ export default function LandingPage() {
                 onClick={handleGetStarted}
                 className="bg-white text-primary-600 hover:bg-primary-50 text-lg px-8 py-4 border-white"
               >
-                Começar Grátis
+                {t('landing.pricing.ctaPrimary')}
               </Button>
               <Button
                 variant="primary"
@@ -565,11 +555,11 @@ export default function LandingPage() {
                 onClick={handleUpgrade}
                 className="bg-white text-primary-600 hover:bg-primary-50 text-lg px-8 py-4 border-2 border-white"
               >
-                Ver Planos Premium
+                {t('landing.pricing.ctaSecondary')}
               </Button>
             </div>
             <p className="text-sm text-primary-100 mt-6">
-              ✨ Sem compromisso • Cancele quando quiser
+              {t('landing.pricing.trustBadge')}
             </p>
           </div>
         </div>
@@ -580,50 +570,50 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-2xl font-bold mb-4">💰 Finanças</h3>
+              <h3 className="text-2xl font-bold mb-4">{t('landing.footer.brand')}</h3>
               <p className="text-gray-400">
-                Controle suas finanças pessoais de forma simples e eficiente.
+                {t('landing.footer.description')}
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Links Rápidos</h4>
+              <h4 className="font-semibold mb-4">{t('landing.footer.quickLinks.title')}</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>
                   <Link href="/login" className="hover:text-white">
-                    Entrar
+                    {t('landing.footer.quickLinks.login')}
                   </Link>
                 </li>
                 <li>
                   <Link href="/signup" className="hover:text-white">
-                    Cadastrar
+                    {t('landing.footer.quickLinks.signup')}
                   </Link>
                 </li>
                 <li>
                   <Link href="/upgrade" className="hover:text-white">
-                    Planos Premium
+                    {t('landing.footer.quickLinks.premium')}
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Recursos</h4>
+              <h4 className="font-semibold mb-4">{t('landing.footer.features.title')}</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>Dashboard Intuitivo</li>
-                <li>Metas Financeiras</li>
-                <li>Análises Avançadas</li>
-                <li>100% Seguro</li>
+                <li>{t('landing.footer.features.dashboard')}</li>
+                <li>{t('landing.footer.features.goals')}</li>
+                <li>{t('landing.footer.features.analytics')}</li>
+                <li>{t('landing.footer.features.security')}</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Planejamento Finanças. Todos os direitos reservados.</p>
+            <p>{t('landing.footer.copyright')}</p>
             <div className="mt-4 flex justify-center gap-6">
               <Link href="/privacy" className="hover:text-white transition-colors">
-                Política de Privacidade
+                {t('landing.footer.privacy')}
               </Link>
               <span className="text-gray-600">|</span>
               <Link href="/terms" className="hover:text-white transition-colors">
-                Termos de Uso
+                {t('landing.footer.terms')}
               </Link>
             </div>
           </div>

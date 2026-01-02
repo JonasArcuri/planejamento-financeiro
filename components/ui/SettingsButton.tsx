@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/contexts/ToastContext'
@@ -12,10 +13,12 @@ import Button from './Button'
 import DeleteAccountModal from '@/components/settings/DeleteAccountModal'
 import { deleteUserAccount } from '@/services/firebase/account'
 import { getCurrentUser } from '@/services/firebase/auth'
+import { Currency } from '@/types'
 
 export default function SettingsButton() {
   const { language, setLanguage, t } = useLanguage()
   const { theme, setTheme } = useTheme()
+  const { currency, setCurrency } = useCurrency()
   const { user } = useAuth()
   const router = useRouter()
   const { showToast } = useToast()
@@ -29,6 +32,10 @@ export default function SettingsButton() {
 
   const handleThemeChange = async (newTheme: 'light' | 'dark') => {
     await setTheme(newTheme)
+  }
+
+  const handleCurrencyChange = async (newCurrency: Currency) => {
+    await setCurrency(newCurrency)
   }
 
   return (
@@ -156,6 +163,46 @@ export default function SettingsButton() {
                 {t('settings.dark')}
               </button>
             </div>
+          </div>
+
+          {/* Seletor de Moeda */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              {t('settings.currency')}
+            </label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleCurrencyChange('BRL')}
+                className={`
+                  flex-1 px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2
+                  ${
+                    currency === 'BRL'
+                      ? 'bg-primary-600 text-white shadow-md'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }
+                `}
+              >
+                <span className="text-lg font-bold">R$</span>
+                <span className="text-sm">{t('settings.currencyBRL')}</span>
+              </button>
+              <button
+                onClick={() => handleCurrencyChange('USD')}
+                className={`
+                  flex-1 px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2
+                  ${
+                    currency === 'USD'
+                      ? 'bg-primary-600 text-white shadow-md'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }
+                `}
+              >
+                <span className="text-lg font-bold">$</span>
+                <span className="text-sm">{t('settings.currencyUSD')}</span>
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              {t('settings.currencyWarning')}
+            </p>
           </div>
 
           {/* Seção de Exclusão de Conta */}
