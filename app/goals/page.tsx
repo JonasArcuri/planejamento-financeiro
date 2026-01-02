@@ -123,7 +123,7 @@ export default function GoalsPage() {
 
   if (loading && goals.length === 0) {
     return (
-      <ProtectedRoute>
+      <ProtectedRoute requireAuth>
         <Loading />
       </ProtectedRoute>
     )

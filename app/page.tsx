@@ -4,16 +4,17 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useGuest } from '@/contexts/GuestContext'
 import Button from '@/components/ui/Button'
 import Loading from '@/components/Loading'
 import Link from 'next/link'
 import Image from 'next/image'
 import LanguageSelector from '@/components/landing/LanguageSelector'
-import InstallPrompt from '@/components/pwa/InstallPrompt'
 
 export default function LandingPage() {
   const { user, loading } = useAuth()
   const { t } = useLanguage()
+  const { enableGuest } = useGuest()
   const router = useRouter()
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
@@ -55,6 +56,11 @@ export default function LandingPage() {
 
   const handleUpgrade = () => {
     router.push('/signup?upgrade=true')
+  }
+
+  const handleTryAsGuest = () => {
+    enableGuest()
+    router.push('/dashboard')
   }
 
   const handleImageClick = (imageSrc: string) => {
@@ -117,12 +123,15 @@ export default function LandingPage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  onClick={handleUpgrade}
+                  onClick={handleTryAsGuest}
                   className="text-lg px-8 py-4"
                 >
-                  {t('landing.hero.ctaSecondary')}
+                  {t('landing.hero.ctaGuest')}
                 </Button>
               </div>
+              <p className="text-xs text-gray-500 mt-2">
+                {t('landing.hero.guestNotice')}
+              </p>
               <p className="text-sm text-gray-500 mt-4">
                 {t('landing.hero.trustBadge')}
               </p>
@@ -331,15 +340,15 @@ export default function LandingPage() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                   />
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                {t('landing.benefits.items.mobile.title')}
+                {t('landing.benefits.items.security.title')}
               </h3>
               <p className="text-gray-600">
-                {t('landing.benefits.items.mobile.description')}
+                {t('landing.benefits.items.security.description')}
               </p>
             </div>
           </div>
@@ -565,9 +574,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Install Prompt */}
-      <InstallPrompt />
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">

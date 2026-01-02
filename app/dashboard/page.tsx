@@ -2,7 +2,7 @@
 
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { useAuth } from '@/hooks/useAuth'
-import { useTransactions } from '@/hooks/useTransactions'
+import { useTransactionsUnified } from '@/hooks/useTransactionsUnified'
 import { logout } from '@/services/firebase/auth'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState, Suspense } from 'react'
@@ -24,6 +24,8 @@ import GoalsSummary from '@/components/dashboard/GoalsSummary'
 import SettingsButton from '@/components/ui/SettingsButton'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useCurrency } from '@/contexts/CurrencyContext'
+import { useGuest } from '@/contexts/GuestContext'
+import { getGuestTransactionCount } from '@/lib/guestMigration'
 import {
   getCurrentMonthTransactions,
   getPreviousMonthTransactions,
@@ -40,9 +42,10 @@ import { formatCurrency } from '@/lib/currency'
 
 function DashboardContent() {
   const { user, userData } = useAuth()
-  const { transactions, loading, fetchTransactions } = useTransactions(user?.uid || null)
+  const { transactions, loading } = useTransactionsUnified()
   const { goals } = useGoals(user?.uid || null)
   const { checkFeature, isPremium } = usePlan()
+  const { isGuest } = useGuest()
   const router = useRouter()
   const searchParams = useSearchParams()
   const { showToast } = useToast()
@@ -86,25 +89,7 @@ function DashboardContent() {
     }
   }, [searchParams, router, showToast, user?.uid, t])
 
-  useEffect(() => {
-    if (user?.uid) {
-      fetchTransactions()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.uid])
-
-  // Atualizar quando a página ganha foco (volta de outra página)
-  useEffect(() => {
-    const handleFocus = () => {
-      if (user?.uid) {
-        fetchTransactions()
-      }
-    }
-
-    window.addEventListener('focus', handleFocus)
-    return () => window.removeEventListener('focus', handleFocus)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.uid])
+  // Transações são carregadas automaticamente pelo hook unificado
 
   const handleLogout = async () => {
     try {
@@ -181,6 +166,40 @@ function DashboardContent() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Aviso do modo visitante */}
+        {isGuest && (
+          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/30 dark:to-orange-900/30 border-b-2 border-yellow-300 dark:border-yellow-700">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3 flex-1">
+                  <div className="flex-shrink-0 mt-0.5">
+                    <svg className="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-yellow-900 dark:text-yellow-200 mb-1">
+                      {t('dashboard.guestWarning')}
+                    </p>
+                    <p className="text-sm text-yellow-800 dark:text-yellow-300">
+                      {t('dashboard.guestWarningMessage')}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2 w-full sm:w-auto">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => router.push('/signup')}
+                    className="flex-1 sm:flex-none"
+                  >
+                    {t('dashboard.guestCtaCreateAccount')}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16 items-center">
@@ -188,23 +207,30 @@ function DashboardContent() {
                 {t('dashboard.appName')}
               </h1>
               <div className="flex items-center gap-4">
-                <SettingsButton />
+                {!isGuest && <SettingsButton />}
                 <span className="text-sm text-gray-600 dark:text-gray-300">
-                  {userData?.name || user?.email}
+                  {isGuest ? 'Visitante' : (userData?.name || user?.email)}
                 </span>
-                {!isPremium && (
+                {!isGuest && !isPremium && (
                   <span className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
                     Free
                   </span>
                 )}
-                {isPremium && (
+                {!isGuest && isPremium && (
                   <span className="px-2 py-1 text-xs font-medium bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded">
                     Premium
                   </span>
                 )}
-                <Button variant="outline" size="sm" onClick={handleLogout}>
-                  {t('common.logout')}
-                </Button>
+                {!isGuest && (
+                  <Button variant="outline" size="sm" onClick={handleLogout}>
+                    {t('common.logout')}
+                  </Button>
+                )}
+                {isGuest && (
+                  <Button variant="outline" size="sm" onClick={() => router.push('/login')}>
+                    Entrar
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -281,6 +307,53 @@ function DashboardContent() {
               }
             />
           </div>
+
+          {/* Card de CTA para modo visitante */}
+          {isGuest && (
+            <div className="mb-8 bg-gradient-to-br from-primary-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold mb-2">
+                    {t('dashboard.guestCtaSaveData')}
+                  </h3>
+                  <p className="text-primary-100 mb-1">
+                    {(() => {
+                      const count = getGuestTransactionCount()
+                      return count > 0 
+                        ? t('dashboard.guestDataWillBeSaved')
+                        : t('dashboard.guestWarningMessage')
+                    })()}
+                  </p>
+                  {(() => {
+                    const count = getGuestTransactionCount()
+                    if (count > 0 && count < 3) {
+                      return (
+                        <p className="text-sm text-primary-200 mt-2">
+                          {t('dashboard.guestLimitWarning').replace('{count}', String(count))}
+                        </p>
+                      )
+                    }
+                    if (count >= 3) {
+                      return (
+                        <p className="text-sm font-semibold text-yellow-200 mt-2">
+                          {t('dashboard.guestLimitReached')}
+                        </p>
+                      )
+                    }
+                    return null
+                  })()}
+                </div>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => router.push('/signup')}
+                  className="bg-white text-primary-600 hover:bg-primary-50 font-semibold whitespace-nowrap"
+                >
+                  {t('dashboard.guestCtaCreateAccount')}
+                </Button>
+              </div>
+            </div>
+          )}
 
           {/* Ações Rápidas */}
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-8 shadow-sm">

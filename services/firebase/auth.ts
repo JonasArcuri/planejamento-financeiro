@@ -12,6 +12,7 @@ import { auth } from './config'
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from './config'
 import { User, UserPlan } from '@/types'
+import { migrateGuestTransactions } from '@/lib/guestMigration'
 
 const googleProvider = new GoogleAuthProvider()
 
@@ -57,6 +58,14 @@ export async function signUpWithEmail(
       createdAt: serverTimestamp(),
     })
 
+    // Migrar transações do visitante se houver
+    try {
+      await migrateGuestTransactions(user.uid)
+    } catch (error) {
+      console.error('Erro ao migrar dados do visitante:', error)
+      // Não falhar o cadastro se a migração falhar
+    }
+
     return user
   } catch (error: any) {
     throw new Error(error.message || 'Erro ao criar conta')
@@ -85,6 +94,14 @@ export async function loginWithGoogle() {
         plan: 'free' as UserPlan,
         createdAt: serverTimestamp(),
       })
+
+      // Migrar transações do visitante se houver
+      try {
+        await migrateGuestTransactions(user.uid)
+      } catch (error) {
+        console.error('Erro ao migrar dados do visitante:', error)
+        // Não falhar o login se a migração falhar
+      }
     }
 
     return user

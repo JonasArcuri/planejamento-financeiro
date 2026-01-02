@@ -55,7 +55,15 @@
     "subscriptionActivated": "Assinatura ativada com sucesso! Bem-vindo ao Premium!",
     "checkoutCanceled": "Checkout cancelado",
     "errorReloadingUserData": "Erro ao recarregar dados do usuário:",
-    "logoutError": "Erro ao fazer logout:"
+    "logoutError": "Erro ao fazer logout:",
+    "guestWarning": "Modo Visitante",
+    "guestWarningMessage": "Seus dados não serão salvos permanentemente. Crie uma conta para salvar suas transações.",
+    "guestCtaCreateAccount": "Criar Conta Grátis",
+    "guestCtaSaveData": "Salvar Minhas Transações",
+    "guestLimitWarning": "Você está usando {count} de 3 transações no modo visitante",
+    "guestLimitReached": "Limite de 3 transações atingido",
+    "guestLimitReachedMessage": "Crie uma conta para continuar adicionando transações e salvar seus dados permanentemente.",
+    "guestDataWillBeSaved": "Suas transações serão salvas automaticamente ao criar a conta"
   },
   "transactions": {
     "title": "Transações",
@@ -77,6 +85,7 @@
     "deleteConfirm": "Tem certeza que deseja excluir esta transação?",
     "deleteConfirmDesc": "Esta ação não pode ser desfeita.",
     "transactionLimitReached": "Limite de transações atingido",
+    "guestLimitReached": "Limite de 3 transações atingido no modo visitante. Crie uma conta para continuar.",
     "createSuccess": "Transação criada com sucesso!",
     "updateSuccess": "Transação atualizada com sucesso!",
     "deleteSuccess": "Transação excluída com sucesso!",
@@ -151,13 +160,6 @@
     "november": "Novembro",
     "december": "Dezembro"
   },
-  "pwa": {
-    "installTitle": "Instalar App",
-    "installDescription": "Instale nosso app para acesso rápido e offline",
-    "install": "Instalar",
-    "installed": "App instalado com sucesso!",
-    "installError": "Erro ao instalar o app"
-  },
   "settings": {
     "title": "Configurações",
     "language": "Idioma",
@@ -202,6 +204,8 @@
       "subheadline": "Gerencie receitas, despesas e metas financeiras em um só lugar. Tome decisões inteligentes sobre seu dinheiro com visualizações claras e insights práticos.",
       "ctaPrimary": "Começar Grátis",
       "ctaSecondary": "Ver Planos Premium",
+      "ctaGuest": "Experimentar sem cadastro",
+      "guestNotice": "💡 Experimente sem criar conta (até 3 transações). Seus dados não serão salvos.",
       "trustBadge": "✨ Sem cartão de crédito • Teste grátis • Cancele quando quiser",
       "balanceCard": {
         "title": "Saldo do Mês",
@@ -239,9 +243,9 @@
           "title": "100% Seguro",
           "description": "Seus dados são protegidos com criptografia de ponta e você controla totalmente suas informações."
         },
-        "mobile": {
-          "title": "Mobile-First",
-          "description": "Acesse de qualquer dispositivo. Interface responsiva e otimizada para celular, tablet e desktop."
+        "security": {
+          "title": "Segurança",
+          "description": "Seus dados financeiros protegidos com criptografia e armazenamento seguro."
         }
       }
     },

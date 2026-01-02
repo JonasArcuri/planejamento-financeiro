@@ -55,7 +55,15 @@
     "subscriptionActivated": "Subscription activated successfully! Welcome to Premium!",
     "checkoutCanceled": "Checkout canceled",
     "errorReloadingUserData": "Error reloading user data:",
-    "logoutError": "Error logging out:"
+    "logoutError": "Error logging out:",
+    "guestWarning": "Guest Mode",
+    "guestWarningMessage": "Your data will not be saved permanently. Create an account to save your transactions.",
+    "guestCtaCreateAccount": "Create Free Account",
+    "guestCtaSaveData": "Save My Transactions",
+    "guestLimitWarning": "You are using {count} of 3 transactions in guest mode",
+    "guestLimitReached": "3 transaction limit reached",
+    "guestLimitReachedMessage": "Create an account to continue adding transactions and save your data permanently.",
+    "guestDataWillBeSaved": "Your transactions will be saved automatically when you create an account"
   },
   "transactions": {
     "title": "Transactions",
@@ -77,6 +85,7 @@
     "deleteConfirm": "Are you sure you want to delete this transaction?",
     "deleteConfirmDesc": "This action cannot be undone.",
     "transactionLimitReached": "Transaction limit reached",
+    "guestLimitReached": "Guest mode limit of 3 transactions reached. Create an account to continue.",
     "createSuccess": "Transaction created successfully!",
     "updateSuccess": "Transaction updated successfully!",
     "deleteSuccess": "Transaction deleted successfully!",
@@ -151,13 +160,6 @@
     "november": "November",
     "december": "December"
   },
-  "pwa": {
-    "installTitle": "Install App",
-    "installDescription": "Install our app for quick and offline access",
-    "install": "Install",
-    "installed": "App installed successfully!",
-    "installError": "Error installing app"
-  },
   "settings": {
     "title": "Settings",
     "language": "Language",
@@ -202,6 +204,8 @@
       "subheadline": "Manage income, expenses, and financial goals in one place. Make smart decisions about your money with clear visualizations and practical insights.",
       "ctaPrimary": "Get Started Free",
       "ctaSecondary": "View Premium Plans",
+      "ctaGuest": "Try without signing up",
+      "guestNotice": "💡 Try without creating an account (up to 3 transactions). Your data will not be saved.",
       "trustBadge": "✨ No credit card required • Free trial • Cancel anytime",
       "balanceCard": {
         "title": "Monthly Balance",
@@ -239,9 +243,9 @@
           "title": "100% Secure",
           "description": "Your data is protected with state-of-the-art encryption and you have full control over your information."
         },
-        "mobile": {
-          "title": "Mobile-First",
-          "description": "Access from any device. Responsive interface optimized for mobile, tablet, and desktop."
+        "security": {
+          "title": "Security",
+          "description": "Your financial data protected with encryption and secure storage."
         }
       }
     },

@@ -119,7 +119,7 @@ export default function ReportsPage() {
 
   if (loading) {
     return (
-      <ProtectedRoute>
+      <ProtectedRoute requireAuth>
         <Loading />
       </ProtectedRoute>
     )

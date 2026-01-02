@@ -2,7 +2,7 @@
 
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { useAuth } from '@/hooks/useAuth'
-import { useTransactions } from '@/hooks/useTransactions'
+import { useTransactionsUnified } from '@/hooks/useTransactionsUnified'
 import { usePlan } from '@/hooks/usePlan'
 import { useToast } from '@/contexts/ToastContext'
 import { useState } from 'react'
@@ -16,15 +16,29 @@ import Modal from '@/components/ui/Modal'
 import Button from '@/components/ui/Button'
 import SettingsButton from '@/components/ui/SettingsButton'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useGuest } from '@/contexts/GuestContext'
+import { getGuestTransactionCount } from '@/lib/guestMigration'
 import { useRouter } from 'next/navigation'
 import { logout } from '@/services/firebase/auth'
 import Loading from '@/components/Loading'
 
 export default function TransactionsPage() {
   const { user, userData } = useAuth()
-  const { transactions, loading, addTransaction, editTransaction, removeTransaction } =
-    useTransactions(user?.uid || null)
-  const { canCreate, isPremium } = usePlan()
+  const { 
+    transactions, 
+    loading, 
+    addTransaction, 
+    editTransaction, 
+    removeTransaction,
+    canCreate: canCreateTransaction,
+    isGuest,
+  } = useTransactionsUnified()
+  const { canCreate: canCreatePlan, isPremium } = usePlan()
+  
+  // Combinar limitações do plano e do modo visitante
+  const canCreate = isGuest 
+    ? canCreateTransaction 
+    : canCreatePlan
   const { showToast } = useToast()
   const router = useRouter()
   const { t } = useLanguage()
@@ -45,7 +59,10 @@ export default function TransactionsPage() {
 
   const handleCreate = () => {
     if (!canCreate.allowed) {
-      showToast(canCreate.reason || t('transactions.transactionLimitReached'), 'error')
+      const message = isGuest 
+        ? t('transactions.guestLimitReached') 
+        : (canCreate.reason || t('transactions.transactionLimitReached'))
+      showToast(message, 'error')
       return
     }
     setSelectedTransaction(null)
@@ -130,29 +147,74 @@ export default function TransactionsPage() {
                 </h1>
               </div>
               <div className="flex items-center gap-4">
-                <SettingsButton />
+                {!isGuest && <SettingsButton />}
                 <span className="text-sm text-gray-600 dark:text-gray-300">
-                  {userData?.name || user?.email}
+                  {isGuest ? 'Visitante' : (userData?.name || user?.email)}
                 </span>
-                {!isPremium && (
+                {!isGuest && !isPremium && (
                   <span className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
                     Free
                   </span>
                 )}
-                {isPremium && (
+                {!isGuest && isPremium && (
                   <span className="px-2 py-1 text-xs font-medium bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded">
                     Premium
                   </span>
                 )}
-                <Button variant="outline" size="sm" onClick={handleLogout}>
-                  {t('common.logout')}
-                </Button>
+                {!isGuest && (
+                  <Button variant="outline" size="sm" onClick={handleLogout}>
+                    {t('common.logout')}
+                  </Button>
+                )}
+                {isGuest && (
+                  <Button variant="primary" size="sm" onClick={() => router.push('/signup')}>
+                    {t('dashboard.guestCtaCreateAccount')}
+                  </Button>
+                )}
               </div>
             </div>
           </div>
         </nav>
 
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Aviso de limite no modo visitante */}
+          {isGuest && (() => {
+            const count = getGuestTransactionCount()
+            if (count >= 2) {
+              return (
+                <div className="mb-6 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 dark:border-yellow-600 p-4 rounded-r-lg">
+                  <div className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-yellow-900 dark:text-yellow-200 mb-1">
+                        {count >= 3 
+                          ? t('dashboard.guestLimitReached')
+                          : t('dashboard.guestLimitWarning').replace('{count}', String(count))
+                        }
+                      </p>
+                      <p className="text-sm text-yellow-800 dark:text-yellow-300 mb-3">
+                        {count >= 3 
+                          ? t('dashboard.guestLimitReachedMessage')
+                          : t('dashboard.guestWarningMessage')
+                        }
+                      </p>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => router.push('/signup')}
+                      >
+                        {t('dashboard.guestCtaCreateAccount')}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )
+            }
+            return null
+          })()}
+
           <div className="flex justify-between items-center mb-6">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">

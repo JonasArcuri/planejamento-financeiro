@@ -2,14 +2,20 @@
 
 import AuthForm from '@/components/AuthForm'
 import { useAuth } from '@/hooks/useAuth'
+import { useGuest } from '@/contexts/GuestContext'
+import { hasGuestData, getGuestTransactionCount } from '@/lib/guestMigration'
 import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Loading from '@/components/Loading'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 function SignUpContent() {
   const { user, loading } = useAuth()
+  const { isGuest } = useGuest()
+  const { t } = useLanguage()
   const router = useRouter()
   const searchParams = useSearchParams()
+  const hasGuestTransactions = hasGuestData()
 
   useEffect(() => {
     if (!loading && user) {
@@ -40,6 +46,18 @@ function SignUpContent() {
           <p className="mt-2 text-center text-sm text-gray-600">
             Comece a gerenciar suas finanças hoje
           </p>
+          {hasGuestTransactions && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800 text-center">
+                💡 {(() => {
+                  const count = getGuestTransactionCount()
+                  return count === 1 
+                    ? 'Sua transação do modo visitante será salva automaticamente após criar a conta.'
+                    : `Suas ${count} transações do modo visitante serão salvas automaticamente após criar a conta.`
+                })()}
+              </p>
+            </div>
+          )}
         </div>
         <AuthForm mode="signup" />
       </div>

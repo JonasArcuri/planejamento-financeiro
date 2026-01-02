@@ -7,6 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { loginSchema, signUpSchema, type LoginFormData, type SignUpFormData } from '@/lib/validations'
 import { loginWithEmail, signUpWithEmail, loginWithGoogle } from '@/services/firebase/auth'
+import { useGuest } from '@/contexts/GuestContext'
+import { hasGuestData, getGuestTransactionCount } from '@/lib/guestMigration'
 import Input from './ui/Input'
 import Button from './ui/Button'
 
@@ -16,8 +18,10 @@ interface AuthFormProps {
 
 export default function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter()
+  const { isGuest, disableGuest } = useGuest()
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [migrationMessage, setMigrationMessage] = useState<string | null>(null)
 
   const isLogin = mode === 'login'
 
@@ -31,35 +35,82 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
   const onSubmit = async (data: LoginFormData | SignUpFormData) => {
     setError(null)
+    setMigrationMessage(null)
     setIsLoading(true)
 
     try {
       if (isLogin) {
         const { email, password } = data as LoginFormData
         await loginWithEmail(email, password)
+        
+        // Desativar modo visitante após login bem-sucedido
+        if (isGuest) {
+          disableGuest()
+        }
+        
         router.push('/dashboard')
       } else {
         const { name, email, password } = data as SignUpFormData
+        const hasGuestTransactions = hasGuestData()
+        
         await signUpWithEmail(email, password, name)
-        router.push('/dashboard')
+        
+        // Desativar modo visitante após cadastro bem-sucedido
+        if (isGuest) {
+          disableGuest()
+        }
+        
+        // Mostrar mensagem de migração se houver transações migradas
+        if (hasGuestTransactions) {
+          const count = getGuestTransactionCount()
+          setMigrationMessage(
+            count === 1 
+              ? 'Sua transação do modo visitante foi salva!' 
+              : `Suas ${count} transações do modo visitante foram salvas!`
+          )
+        }
+        
+        // Pequeno delay para mostrar a mensagem
+        setTimeout(() => {
+          router.push('/dashboard')
+        }, hasGuestTransactions ? 1500 : 0)
       }
     } catch (err: any) {
       setError(err.message || 'Ocorreu um erro. Tente novamente.')
-    } finally {
       setIsLoading(false)
     }
   }
 
   const handleGoogleLogin = async () => {
     setError(null)
+    setMigrationMessage(null)
     setIsLoading(true)
 
     try {
+      const hasGuestTransactions = hasGuestData()
       await loginWithGoogle()
-      router.push('/dashboard')
+      
+      // Desativar modo visitante após login bem-sucedido
+      if (isGuest) {
+        disableGuest()
+      }
+      
+      // Mostrar mensagem de migração se houver transações migradas
+      if (hasGuestTransactions) {
+        const count = getGuestTransactionCount()
+        setMigrationMessage(
+          count === 1 
+            ? 'Sua transação do modo visitante foi salva!' 
+            : `Suas ${count} transações do modo visitante foram salvas!`
+        )
+      }
+      
+      // Pequeno delay para mostrar a mensagem
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, hasGuestTransactions ? 1500 : 0)
     } catch (err: any) {
       setError(err.message || 'Erro ao fazer login com Google')
-    } finally {
       setIsLoading(false)
     }
   }
@@ -106,6 +157,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
+
+        {migrationMessage && (
+          <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-600">{migrationMessage}</p>
           </div>
         )}
 
