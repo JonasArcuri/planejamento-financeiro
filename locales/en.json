@@ -14,10 +14,12 @@
     "error": "Error",
     "success": "Success",
     "confirm": "Confirm",
-    "close": "Close"
+    "close": "Close",
+    "back": "Back"
   },
   "auth": {
     "login": "Login",
+    "loginSubtitle": "Manage your personal finances simply",
     "signup": "Sign Up",
     "email": "Email",
     "password": "Password",
