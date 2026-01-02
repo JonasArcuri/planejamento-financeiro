@@ -13,17 +13,17 @@ export default function StatCard({
   variant = 'default',
 }: StatCardProps) {
   const variants = {
-    default: 'bg-white border-gray-200',
-    income: 'bg-green-50 border-green-200',
-    expense: 'bg-red-50 border-red-200',
-    balance: 'bg-blue-50 border-blue-200',
+    default: 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700',
+    income: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+    expense: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
+    balance: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
   }
 
   const textColors = {
-    default: 'text-gray-900',
-    income: 'text-green-700',
-    expense: 'text-red-700',
-    balance: 'text-blue-700',
+    default: 'text-gray-900 dark:text-white',
+    income: 'text-green-700 dark:text-green-400',
+    expense: 'text-red-700 dark:text-red-400',
+    balance: 'text-blue-700 dark:text-blue-400',
   }
 
   return (
@@ -35,7 +35,7 @@ export default function StatCard({
     >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
           <p className={`mt-2 text-3xl font-bold ${textColors[variant]}`}>
             {value}
           </p>

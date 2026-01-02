@@ -10,6 +10,7 @@ import { Transaction } from '@/types'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import Button from '@/components/ui/Button'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface TransactionFormProps {
   transaction?: Transaction
@@ -24,6 +25,7 @@ export default function TransactionForm({
   onCancel,
   isLoading = false,
 }: TransactionFormProps) {
+  const { t } = useLanguage()
   const isEditing = !!transaction
 
   const {
@@ -83,8 +85,8 @@ export default function TransactionForm({
   }
 
   const typeOptions = [
-    { value: 'income', label: 'Receita' },
-    { value: 'expense', label: 'Despesa' },
+    { value: 'income', label: t('transactions.income') },
+    { value: 'expense', label: t('transactions.expense') },
   ]
 
   const categoryOptions = DEFAULT_CATEGORIES.map((cat) => ({
@@ -95,14 +97,14 @@ export default function TransactionForm({
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       <Select
-        label="Tipo"
+        label={t('transactions.type')}
         {...register('type')}
         options={typeOptions}
         error={errors.type?.message}
       />
 
       <Select
-        label="Categoria"
+        label={t('transactions.category')}
         {...register('category')}
         options={categoryOptions}
         error={errors.category?.message}
@@ -112,9 +114,9 @@ export default function TransactionForm({
       {showCustomCategory && (
         <div className="transition-opacity duration-200 ease-in-out">
           <Input
-            label="Especifique o gasto/receita"
+            label={t('transactions.customCategory')}
             type="text"
-            placeholder="Ex: Manutenção do carro, Presente, etc."
+            placeholder={t('transactions.customCategoryPlaceholder')}
             {...register('customCategory')}
             error={errors.customCategory?.message}
           />
@@ -122,7 +124,7 @@ export default function TransactionForm({
       )}
 
       <Input
-        label="Valor"
+        label={t('transactions.amount')}
         type="number"
         step="0.01"
         min="0.01"
@@ -132,7 +134,7 @@ export default function TransactionForm({
       />
 
       <Input
-        label="Data"
+        label={t('transactions.date')}
         type="date"
         {...register('date')}
         error={errors.date?.message}
@@ -145,7 +147,7 @@ export default function TransactionForm({
           className="flex-1"
           isLoading={isLoading}
         >
-          {isEditing ? 'Salvar Alterações' : 'Criar Transação'}
+          {isEditing ? t('common.save') : t('transactions.newTransaction')}
         </Button>
         <Button
           type="button"
@@ -153,7 +155,7 @@ export default function TransactionForm({
           onClick={onCancel}
           disabled={isLoading}
         >
-          Cancelar
+          {t('common.cancel')}
         </Button>
       </div>
     </form>

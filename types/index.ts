@@ -3,12 +3,20 @@
 export type TransactionType = 'income' | 'expense'
 
 export type UserPlan = 'free' | 'premium'
+export type Theme = 'light' | 'dark'
+export type Language = 'pt' | 'en'
+
+export interface UserPreferences {
+  theme?: Theme
+  language?: Language
+}
 
 export interface User {
   id: string
   name: string
   email: string
   plan: UserPlan
+  preferences?: UserPreferences
 }
 
 export interface Transaction {

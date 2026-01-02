@@ -8,6 +8,9 @@ import { useState, useMemo } from 'react'
 import { Transaction } from '@/types'
 import MonthYearFilter from '@/components/reports/MonthYearFilter'
 import Button from '@/components/ui/Button'
+import ThemeToggle from '@/components/ui/ThemeToggle'
+import LanguageToggle from '@/components/ui/LanguageToggle'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { useRouter } from 'next/navigation'
 import { logout } from '@/services/firebase/auth'
 import Loading from '@/components/Loading'
@@ -19,6 +22,7 @@ export default function ReportsPage() {
   const { transactions, loading, fetchTransactions } = useTransactions(user?.uid || null)
   const { showToast } = useToast()
   const router = useRouter()
+  const { t } = useLanguage()
 
   const now = new Date()
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1)
@@ -120,28 +124,30 @@ export default function ReportsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Navegação */}
-        <nav className="bg-white border-b border-gray-200">
+        <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
               <div className="flex items-center">
-                <h1 className="text-xl font-bold text-primary-600">
+                <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">
                   Planejamento Financeiro
                 </h1>
               </div>
               <div className="flex items-center gap-4">
+                <LanguageToggle />
+                <ThemeToggle />
                 <Button variant="ghost" onClick={() => router.push('/dashboard')}>
-                  Dashboard
+                  {t('common.dashboard')}
                 </Button>
                 <Button variant="ghost" onClick={() => router.push('/transactions')}>
-                  Transações
+                  {t('common.transactions')}
                 </Button>
                 <Button variant="ghost" onClick={() => router.push('/goals')}>
-                  Metas
+                  {t('common.goals')}
                 </Button>
                 <Button variant="ghost" onClick={() => router.push('/reports')}>
-                  Relatórios
+                  {t('common.reports')}
                 </Button>
                 {userData?.plan === 'premium' && (
                   <span className="px-2 py-1 text-xs font-semibold text-white bg-primary-600 rounded">
@@ -149,7 +155,7 @@ export default function ReportsPage() {
                   </span>
                 )}
                 <Button variant="outline" onClick={handleLogout}>
-                  Sair
+                  {t('common.logout')}
                 </Button>
               </div>
             </div>
@@ -158,14 +164,14 @@ export default function ReportsPage() {
 
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Relatório Financeiro</h2>
-            <p className="text-sm text-gray-600 mt-1">
-              Gere um relatório em PDF das suas transações mensais
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('reports.title')}</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              {t('reports.subtitle')}
             </p>
           </div>
 
           {/* Filtro de Mês/Ano */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
             <MonthYearFilter
               onFilterChange={handleFilterChange}
               defaultMonth={selectedMonth}
@@ -174,47 +180,47 @@ export default function ReportsPage() {
           </div>
 
           {/* Resumo do Período */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Resumo - {monthNames[selectedMonth - 1]}/{selectedYear}
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              {t('reports.summary')} - {monthNames[selectedMonth - 1]}/{selectedYear}
             </h3>
 
             {filteredTransactions.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500">Nenhuma transação registrada neste período</p>
+                <p className="text-gray-500 dark:text-gray-400">{t('reports.noTransactions')}</p>
               </div>
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                  <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                    <p className="text-sm text-green-700 font-medium">Total de Receitas</p>
-                    <p className="text-2xl font-bold text-green-600">
+                  <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                    <p className="text-sm text-green-700 dark:text-green-400 font-medium">{t('reports.totalIncome')}</p>
+                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                       {formatCurrency(totalIncome)}
                     </p>
                   </div>
-                  <div className="bg-red-50 rounded-lg p-4 border border-red-200">
-                    <p className="text-sm text-red-700 font-medium">Total de Despesas</p>
-                    <p className="text-2xl font-bold text-red-600">
+                  <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
+                    <p className="text-sm text-red-700 dark:text-red-400 font-medium">{t('reports.totalExpenses')}</p>
+                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">
                       {formatCurrency(totalExpenses)}
                     </p>
                   </div>
                   <div
                     className={`rounded-lg p-4 border ${
                       balance >= 0
-                        ? 'bg-green-50 border-green-200'
-                        : 'bg-red-50 border-red-200'
+                        ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                        : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
                     }`}
                   >
                     <p
                       className={`text-sm font-medium ${
-                        balance >= 0 ? 'text-green-700' : 'text-red-700'
+                        balance >= 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
                       }`}
                     >
-                      Saldo Final
+                      {t('reports.finalBalance')}
                     </p>
                     <p
                       className={`text-2xl font-bold ${
-                        balance >= 0 ? 'text-green-600' : 'text-red-600'
+                        balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       }`}
                     >
                       {formatCurrency(balance)}
@@ -222,8 +228,8 @@ export default function ReportsPage() {
                   </div>
                 </div>
 
-                <p className="text-sm text-gray-600">
-                  {filteredTransactions.length} transação(ões) encontrada(s)
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {filteredTransactions.length} {t('reports.transactionsFound')}
                 </p>
               </>
             )}
@@ -238,15 +244,15 @@ export default function ReportsPage() {
               isLoading={isGeneratingPDF}
               className="min-w-[200px]"
             >
-              {isGeneratingPDF ? 'Gerando PDF...' : 'Gerar Relatório PDF'}
+              {isGeneratingPDF ? t('reports.generatingPDF') : t('reports.generatePDF')}
             </Button>
           </div>
 
           {/* Lista de Transações (Preview) */}
           {filteredTransactions.length > 0 && (
-            <div className="mt-8 bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Transações do Período (Preview)
+            <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                {t('reports.preview')}
               </h3>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {filteredTransactions.map((transaction) => {
@@ -258,7 +264,7 @@ export default function ReportsPage() {
                   return (
                     <div
                       key={transaction.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <div
@@ -267,13 +273,13 @@ export default function ReportsPage() {
                           }`}
                         />
                         <div>
-                          <p className="font-medium text-gray-900">{category}</p>
-                          <p className="text-sm text-gray-500">{formatDate(transaction.date)}</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{category}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(transaction.date)}</p>
                         </div>
                       </div>
                       <p
                         className={`font-bold ${
-                          transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                          transaction.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                         }`}
                       >
                         {transaction.type === 'income' ? '+' : '-'}

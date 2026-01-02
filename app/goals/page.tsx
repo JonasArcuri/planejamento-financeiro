@@ -12,6 +12,9 @@ import GoalList from '@/components/goals/GoalList'
 import AddMoneyModal from '@/components/goals/AddMoneyModal'
 import Modal from '@/components/ui/Modal'
 import Button from '@/components/ui/Button'
+import ThemeToggle from '@/components/ui/ThemeToggle'
+import LanguageToggle from '@/components/ui/LanguageToggle'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { useRouter } from 'next/navigation'
 import { logout } from '@/services/firebase/auth'
 import Loading from '@/components/Loading'
@@ -22,6 +25,7 @@ export default function GoalsPage() {
   const { transactions, fetchTransactions } = useTransactions(user?.uid || null)
   const { showToast } = useToast()
   const router = useRouter()
+  const { t } = useLanguage()
 
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -128,25 +132,27 @@ export default function GoalsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
-        <nav className="bg-white shadow-sm">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16 items-center">
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => router.push('/dashboard')}
-                  className="text-primary-600 hover:text-primary-700 font-medium"
+                  className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
                 >
                   Dashboard
                 </button>
-                <h1 className="text-xl font-bold text-gray-900">Metas Financeiras</h1>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t('goals.title')}</h1>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">
+                <LanguageToggle />
+                <ThemeToggle />
+                <span className="text-sm text-gray-600 dark:text-gray-300">
                   {userData?.name || user?.email}
                 </span>
                 <Button variant="outline" size="sm" onClick={handleLogout}>
-                  Sair
+                  {t('common.logout')}
                 </Button>
               </div>
             </div>
@@ -156,9 +162,9 @@ export default function GoalsPage() {
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Suas Metas</h2>
-              <p className="text-sm text-gray-600 mt-1">
-                Defina e acompanhe suas metas de poupança
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('goals.yourGoals')}</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                {t('goals.subtitle')}
               </p>
             </div>
             <div className="flex gap-3">
@@ -180,10 +186,10 @@ export default function GoalsPage() {
                     d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                   />
                 </svg>
-                Relatório PDF
+                {t('reports.title')}
               </Button>
               <Button variant="primary" onClick={handleCreate}>
-                Nova Meta
+                {t('goals.newGoal')}
               </Button>
             </div>
           </div>
@@ -236,22 +242,22 @@ export default function GoalsPage() {
               setIsDeleteModalOpen(false)
               setSelectedGoal(null)
             }}
-            title="Confirmar Exclusão"
+            title={t('goals.deleteGoal')}
           >
             <div className="space-y-4">
-              <p className="text-gray-600">
-                Tem certeza que deseja excluir a meta
+              <p className="text-gray-600 dark:text-gray-300">
+                {t('goals.deleteConfirm')}
                 {selectedGoal && (
                   <span className="font-medium"> &quot;{selectedGoal.title}&quot;</span>
                 )}
-                ? Esta ação não pode ser desfeita.
+                {t('goals.deleteConfirmDesc')}
               </p>
               <div className="flex gap-3 justify-end">
                 <Button variant="outline" onClick={() => {
                   setIsDeleteModalOpen(false)
                   setSelectedGoal(null)
                 }} disabled={isSubmitting}>
-                  Cancelar
+                  {t('common.cancel')}
                 </Button>
                 <Button
                   variant="primary"
@@ -259,7 +265,7 @@ export default function GoalsPage() {
                   isLoading={isSubmitting}
                   className="bg-red-600 hover:bg-red-700"
                 >
-                  Excluir
+                  {t('common.delete')}
                 </Button>
               </div>
             </div>

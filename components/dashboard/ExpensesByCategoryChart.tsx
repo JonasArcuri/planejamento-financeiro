@@ -2,6 +2,8 @@
 
 // Gráfico de pizza: despesas por categoria
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
+import { useTheme } from '@/contexts/ThemeContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface ExpensesByCategoryChartProps {
   data: Array<{ name: string; value: number }>
@@ -21,18 +23,23 @@ const COLORS = [
 export default function ExpensesByCategoryChart({
   data,
 }: ExpensesByCategoryChartProps) {
+  const { theme } = useTheme()
+  const { t } = useLanguage()
+  const isDark = theme === 'dark'
+  const textColor = isDark ? '#e5e7eb' : '#111827'
+
   if (data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 bg-white rounded-lg border border-gray-200">
-        <p className="text-gray-500">Nenhuma despesa registrada</p>
+      <div className="flex items-center justify-center h-64 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        <p className="text-gray-500 dark:text-gray-400">{t('transactions.noTransactions')}</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Despesas por Categoria
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        {t('dashboard.expensesByCategory')}
       </h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
@@ -56,6 +63,12 @@ export default function ExpensesByCategoryChart({
             ))}
           </Pie>
           <Tooltip
+            contentStyle={{
+              backgroundColor: isDark ? '#1f2937' : '#ffffff',
+              border: `1px solid ${isDark ? '#374151' : '#e5e7eb'}`,
+              borderRadius: '8px',
+              color: textColor,
+            }}
             formatter={(value: number) =>
               new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
@@ -63,7 +76,9 @@ export default function ExpensesByCategoryChart({
               }).format(value)
             }
           />
-          <Legend />
+          <Legend 
+            wrapperStyle={{ color: textColor }}
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>

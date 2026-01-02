@@ -21,6 +21,9 @@ import { usePlan } from '@/hooks/usePlan'
 import { useToast } from '@/contexts/ToastContext'
 import { useGoals } from '@/hooks/useGoals'
 import GoalsSummary from '@/components/dashboard/GoalsSummary'
+import ThemeToggle from '@/components/ui/ThemeToggle'
+import LanguageToggle from '@/components/ui/LanguageToggle'
+import { useLanguage } from '@/contexts/LanguageContext'
 import {
   formatCurrency,
   getCurrentMonthTransactions,
@@ -43,11 +46,12 @@ function DashboardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { showToast } = useToast()
+  const { t } = useLanguage()
 
   // Verificar se veio do checkout e recarregar dados do usuário
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
-      showToast('Assinatura ativada com sucesso! Bem-vindo ao Premium!', 'success')
+      showToast(t('dashboard.subscriptionActivated'), 'success')
       
       // Recarregar dados do usuário após alguns segundos (tempo para webhook processar)
       if (user?.uid) {
@@ -68,7 +72,7 @@ function DashboardContent() {
               }, 3000)
             }
           } catch (error) {
-            console.error('Erro ao recarregar dados do usuário:', error)
+            console.error(t('dashboard.errorReloadingUserData'), error)
           }
         }, 2000)
       }
@@ -76,10 +80,10 @@ function DashboardContent() {
       // Limpar URL
       router.replace('/dashboard')
     } else if (searchParams.get('canceled') === 'true') {
-      showToast('Checkout cancelado', 'info')
+      showToast(t('dashboard.checkoutCanceled'), 'info')
       router.replace('/dashboard')
     }
-  }, [searchParams, router, showToast, user?.uid])
+  }, [searchParams, router, showToast, user?.uid, t])
 
   useEffect(() => {
     if (user?.uid) {
@@ -106,7 +110,7 @@ function DashboardContent() {
       await logout()
       router.push('/login')
     } catch (error) {
-      console.error('Erro ao fazer logout:', error)
+      console.error(t('dashboard.logoutError'), error)
     }
   }
 
@@ -175,19 +179,21 @@ function DashboardContent() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
-        <nav className="bg-white shadow-sm">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16 items-center">
-              <h1 className="text-xl font-bold text-gray-900">
-                Planejamento Financeiro
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                {t('dashboard.appName')}
               </h1>
               <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">
+                <LanguageToggle />
+                <ThemeToggle />
+                <span className="text-sm text-gray-600 dark:text-gray-300">
                   {userData?.name || user?.email}
                 </span>
                 {!isPremium && (
-                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
+                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
                     Free
                   </span>
                 )}
@@ -197,7 +203,7 @@ function DashboardContent() {
                   </span>
                 )}
                 <Button variant="outline" size="sm" onClick={handleLogout}>
-                  Sair
+                  {t('common.logout')}
                 </Button>
               </div>
             </div>
@@ -206,16 +212,16 @@ function DashboardContent() {
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h2>
-            <p className="text-gray-600">
-              Visão geral das suas finanças do mês atual
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{t('dashboard.title')}</h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              {t('dashboard.subtitle')}
             </p>
           </div>
 
           {/* Cards de Estatísticas */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <StatCard
-              title="Saldo do Mês"
+              title={t('dashboard.balance')}
               value={formatCurrency(balance)}
               variant="balance"
               icon={
@@ -235,7 +241,7 @@ function DashboardContent() {
               }
             />
             <StatCard
-              title="Total de Receitas"
+              title={t('dashboard.totalIncome')}
               value={formatCurrency(totalIncome)}
               variant="income"
               icon={
@@ -255,7 +261,7 @@ function DashboardContent() {
               }
             />
             <StatCard
-              title="Total de Despesas"
+              title={t('dashboard.totalExpenses')}
               value={formatCurrency(totalExpenses)}
               variant="expense"
               icon={
@@ -277,18 +283,18 @@ function DashboardContent() {
           </div>
 
           {/* Ações Rápidas */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Ações Rápidas
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-8 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              {t('dashboard.quickActions')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Button
                 variant="outline"
                 onClick={() => router.push('/transactions')}
-                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 hover:border-primary-300 transition-all"
+                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 dark:hover:border-primary-600 transition-all"
               >
                 <svg
-                  className="w-8 h-8 text-primary-600"
+                  className="w-8 h-8 text-primary-600 dark:text-primary-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -300,17 +306,17 @@ function DashboardContent() {
                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                   />
                 </svg>
-                <span className="font-medium text-gray-900">Gerenciar Transações</span>
-                <span className="text-xs text-gray-500">Adicione e edite suas receitas e despesas</span>
+                <span className="font-medium text-gray-900 dark:text-white">{t('dashboard.manageTransactions')}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.manageTransactionsDesc')}</span>
               </Button>
               
               <Button
                 variant="outline"
                 onClick={() => router.push('/goals')}
-                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 hover:border-primary-300 transition-all"
+                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 dark:hover:border-primary-600 transition-all"
               >
                 <svg
-                  className="w-8 h-8 text-primary-600"
+                  className="w-8 h-8 text-primary-600 dark:text-primary-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -322,17 +328,17 @@ function DashboardContent() {
                     d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
                   />
                 </svg>
-                <span className="font-medium text-gray-900">Gerenciar Metas</span>
-                <span className="text-xs text-gray-500">Defina e acompanhe suas metas de poupança</span>
+                <span className="font-medium text-gray-900 dark:text-white">{t('dashboard.manageGoals')}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.manageGoalsDesc')}</span>
               </Button>
               
               <Button
                 variant="outline"
                 onClick={() => router.push('/reports')}
-                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 hover:border-primary-300 transition-all"
+                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 dark:hover:border-primary-600 transition-all"
               >
                 <svg
-                  className="w-8 h-8 text-primary-600"
+                  className="w-8 h-8 text-primary-600 dark:text-primary-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -344,8 +350,8 @@ function DashboardContent() {
                     d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                   />
                 </svg>
-                <span className="font-medium text-gray-900">Gerar Relatório PDF</span>
-                <span className="text-xs text-gray-500">Exporte suas transações mensais em PDF</span>
+                <span className="font-medium text-gray-900 dark:text-white">{t('dashboard.generateReport')}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.generateReportDesc')}</span>
               </Button>
             </div>
           </div>
@@ -355,8 +361,8 @@ function DashboardContent() {
             <div className="mb-6">
               <FeatureLock
                 isLocked={!checkFeature('highExpensesAlert')}
-                featureName="Alerta de Gastos Altos"
-                upgradeMessage="Receba alertas inteligentes sobre gastos acima da média. Disponível apenas no Premium."
+                featureName={t('dashboard.highExpensesAlert')}
+                upgradeMessage={t('dashboard.highExpensesAlertMessage')}
               >
                 <HighExpensesAlert highExpenses={highExpenses} />
               </FeatureLock>
@@ -367,8 +373,8 @@ function DashboardContent() {
           <div className="mb-6">
             <FeatureLock
               isLocked={!checkFeature('monthlyComparison')}
-              featureName="Comparação Mensal"
-              upgradeMessage="Compare seu desempenho mês a mês com análises detalhadas. Disponível apenas no Premium."
+              featureName={t('dashboard.monthlyComparison')}
+              upgradeMessage={t('dashboard.monthlyComparisonMessage')}
             >
               <MonthComparison
                 current={monthComparison.current}
@@ -389,8 +395,8 @@ function DashboardContent() {
           <div className="mb-6">
             <FeatureLock
               isLocked={!checkFeature('categoryTotals')}
-              featureName="Totais por Categoria"
-              upgradeMessage="Veja o saldo detalhado de cada categoria. Disponível apenas no Premium."
+              featureName={t('dashboard.categoryTotals')}
+              upgradeMessage={t('dashboard.categoryTotalsMessage')}
             >
               <CategoryTotals data={categoryTotals} />
             </FeatureLock>

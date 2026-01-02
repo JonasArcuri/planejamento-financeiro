@@ -2,6 +2,7 @@
 
 // Componente de comparação mês atual vs mês anterior
 import { formatCurrency } from '@/lib/utils'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface MonthComparisonProps {
   current: {
@@ -32,6 +33,8 @@ export default function MonthComparison({
   diff,
   percent,
 }: MonthComparisonProps) {
+  const { t } = useLanguage()
+  
   const formatPercent = (value: number) => {
     const sign = value >= 0 ? '+' : ''
     return `${sign}${value.toFixed(1)}%`
@@ -40,10 +43,10 @@ export default function MonthComparison({
   const getPercentColor = (value: number, isExpense: boolean = false) => {
     if (isExpense) {
       // Para despesas, aumento é ruim (vermelho), redução é bom (verde)
-      return value > 0 ? 'text-red-600' : 'text-green-600'
+      return value > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
     } else {
       // Para receitas e saldo, aumento é bom (verde), redução é ruim (vermelho)
-      return value >= 0 ? 'text-green-600' : 'text-red-600'
+      return value >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
     }
   }
 
@@ -65,20 +68,20 @@ export default function MonthComparison({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Comparação Mensal
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        {t('dashboard.monthlyComparison')}
       </h3>
       <div className="space-y-4">
         {/* Receitas */}
-        <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+        <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
           <div>
-            <p className="text-sm text-gray-600">Receitas</p>
-            <p className="text-lg font-semibold text-green-700">
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('transactions.income')}</p>
+            <p className="text-lg font-semibold text-green-700 dark:text-green-400">
               {formatCurrency(current.income)}
             </p>
             {previous.income > 0 && (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Mês anterior: {formatCurrency(previous.income)}
               </p>
             )}
@@ -92,14 +95,14 @@ export default function MonthComparison({
         </div>
 
         {/* Despesas */}
-        <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+        <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
           <div>
-            <p className="text-sm text-gray-600">Despesas</p>
-            <p className="text-lg font-semibold text-red-700">
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('transactions.expense')}</p>
+            <p className="text-lg font-semibold text-red-700 dark:text-red-400">
               {formatCurrency(current.expense)}
             </p>
             {previous.expense > 0 && (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Mês anterior: {formatCurrency(previous.expense)}
               </p>
             )}
@@ -114,17 +117,17 @@ export default function MonthComparison({
 
         {/* Saldo */}
         <div className={`flex items-center justify-between p-3 rounded-lg ${
-          current.balance >= 0 ? 'bg-blue-50' : 'bg-orange-50'
+          current.balance >= 0 ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-orange-50 dark:bg-orange-900/20'
         }`}>
           <div>
-            <p className="text-sm text-gray-600">Saldo</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('dashboard.balance')}</p>
             <p className={`text-lg font-semibold ${
-              current.balance >= 0 ? 'text-blue-700' : 'text-orange-700'
+              current.balance >= 0 ? 'text-blue-700 dark:text-blue-400' : 'text-orange-700 dark:text-orange-400'
             }`}>
               {formatCurrency(current.balance)}
             </p>
             {previous.balance !== 0 && (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Mês anterior: {formatCurrency(previous.balance)}
               </p>
             )}

@@ -6,6 +6,7 @@ import { formatCurrency } from '@/lib/utils'
 import { calculateGoalProgress, getDaysRemaining, isGoalOverdue, isGoalNearDeadline } from '@/lib/goals'
 import { Transaction } from '@/types'
 import Button from '@/components/ui/Button'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface GoalCardProps {
   goal: Goal
@@ -22,6 +23,7 @@ export default function GoalCard({
   onDelete,
   onAddMoney,
 }: GoalCardProps) {
+  const { t } = useLanguage()
   const progress = calculateGoalProgress(goal, transactions)
   const daysRemaining = getDaysRemaining(goal.deadline)
   const isOverdue = isGoalOverdue(goal.deadline)
@@ -43,36 +45,36 @@ export default function GoalCard({
   }
 
   const getStatusText = () => {
-    if (progress.isCompleted) return 'Meta alcançada!'
-    if (isOverdue) return 'Prazo vencido'
-    if (daysRemaining <= 7) return `${daysRemaining} dias restantes`
-    if (isNearDeadline) return `${daysRemaining} dias restantes`
-    return `${daysRemaining} dias restantes`
+    if (progress.isCompleted) return t('goals.goalReached')
+    if (isOverdue) return t('goals.deadlineExpired')
+    if (daysRemaining <= 7) return `${daysRemaining} ${t('goals.daysRemaining')}`
+    if (isNearDeadline) return `${daysRemaining} ${t('goals.daysRemaining')}`
+    return `${daysRemaining} ${t('goals.daysRemaining')}`
   }
 
   const getStatusColor = () => {
-    if (progress.isCompleted) return 'text-green-600'
-    if (isOverdue) return 'text-red-600'
-    if (isNearDeadline) return 'text-orange-600'
-    return 'text-gray-600'
+    if (progress.isCompleted) return 'text-green-600 dark:text-green-400'
+    if (isOverdue) return 'text-red-600 dark:text-red-400'
+    if (isNearDeadline) return 'text-orange-600 dark:text-orange-400'
+    return 'text-gray-600 dark:text-gray-400'
   }
 
   return (
     <div
       className={`
-        bg-white rounded-lg border-2 p-6
-        ${progress.isCompleted ? 'border-green-200' : 'border-gray-200'}
-        hover:shadow-md transition-shadow
+        bg-white dark:bg-gray-800 rounded-lg border-2 p-6
+        ${progress.isCompleted ? 'border-green-200 dark:border-green-800' : 'border-gray-200 dark:border-gray-700'}
+        hover:shadow-md dark:hover:shadow-lg transition-shadow
       `}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <h3 className="text-xl font-bold text-gray-900 mb-1">{goal.title}</h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{goal.title}</h3>
           {goal.description && (
-            <p className="text-sm text-gray-600 mb-2">{goal.description}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{goal.description}</p>
           )}
-          <p className="text-sm text-gray-500">
-            Prazo: {formatDate(goal.deadline)}
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {t('goals.deadline')}: {formatDate(goal.deadline)}
           </p>
         </div>
         <div className="flex gap-2">
@@ -82,7 +84,7 @@ export default function GoalCard({
               size="sm"
               onClick={() => onAddMoney(goal)}
             >
-              Guardar
+              {t('goals.addMoney')}
             </Button>
           )}
           <Button
@@ -90,13 +92,13 @@ export default function GoalCard({
             size="sm"
             onClick={() => onEdit(goal)}
           >
-            Editar
+            {t('common.edit')}
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onDelete(goal.id)}
-            className="text-red-600 hover:text-red-700"
+            className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
           >
             Excluir
           </Button>
@@ -107,13 +109,13 @@ export default function GoalCard({
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <p className="text-sm font-medium text-gray-700">Progresso</p>
-            <p className="text-lg font-bold text-gray-900">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('goals.progress')}</p>
+            <p className="text-lg font-bold text-gray-900 dark:text-white">
               {formatCurrency(progress.currentAmount)} / {formatCurrency(goal.targetAmount)}
             </p>
             {progress.incomeContribution > 0 && (
-              <p className="text-xs text-green-600 mt-1">
-                +{formatCurrency(progress.incomeContribution)} de receitas
+              <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                +{formatCurrency(progress.incomeContribution)} {t('transactions.income')}
               </p>
             )}
           </div>
@@ -126,20 +128,20 @@ export default function GoalCard({
             </p>
           </div>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
           <div
             className={`h-4 rounded-full transition-all duration-500 ${getProgressColor()}`}
             style={{ width: `${Math.min(progress.percentage, 100)}%` }}
           />
         </div>
         {progress.remaining > 0 && !progress.isCompleted && (
-          <p className="text-xs text-gray-500 mt-2">
-            Faltam {formatCurrency(progress.remaining)} para alcançar a meta
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            {t('goals.remaining')} {formatCurrency(progress.remaining)} {t('goals.toReachGoal')}
           </p>
         )}
         {progress.isCompleted && (
-          <p className="text-xs text-green-600 font-medium mt-2">
-            🎉 Parabéns! Você alcançou sua meta!
+          <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-2">
+            {t('goals.congratulations')}
           </p>
         )}
       </div>
