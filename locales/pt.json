@@ -82,6 +82,8 @@
     "expense": "Despesa",
     "customCategory": "Especifique o gasto/receita",
     "customCategoryPlaceholder": "Ex: Manutenção do carro, Presente, etc.",
+    "customCategoryIncome": "Especifique a receita",
+    "customCategoryIncomePlaceholder": "Ex: Venda de produto, Consultoria, etc.",
     "deleteConfirm": "Tem certeza que deseja excluir esta transação?",
     "deleteConfirmDesc": "Esta ação não pode ser desfeita.",
     "transactionLimitReached": "Limite de transações atingido",

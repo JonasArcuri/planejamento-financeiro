@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { transactionSchema, type TransactionFormData } from '@/lib/validations'
-import { DEFAULT_CATEGORIES } from '@/types'
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '@/types'
 import { Transaction } from '@/types'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
@@ -58,6 +58,7 @@ export default function TransactionForm({
 
   // Observar mudanças na categoria para exibir/ocultar campo customCategory
   const selectedCategory = watch('category')
+  const selectedType = watch('type') || transaction?.type || 'expense'
   const showCustomCategory = selectedCategory === 'Outros'
 
   useEffect(() => {
@@ -71,6 +72,20 @@ export default function TransactionForm({
       })
     }
   }, [transaction, reset])
+
+  // Resetar categoria quando o tipo mudar (para evitar categoria inválida)
+  useEffect(() => {
+    const currentType = watch('type')
+    const currentCategory = watch('category')
+    
+    if (currentType && currentCategory) {
+      const validCategories = currentType === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES
+      if (!validCategories.includes(currentCategory as any)) {
+        setValue('category', '', { shouldValidate: false })
+        setValue('customCategory', '', { shouldValidate: false })
+      }
+    }
+  }, [selectedType, watch, setValue])
 
   // Limpar customCategory quando categoria mudar de "Outros" para outra
   useEffect(() => {
@@ -97,7 +112,8 @@ export default function TransactionForm({
     { value: 'expense', label: t('transactions.expense') },
   ]
 
-  const categoryOptions = DEFAULT_CATEGORIES.map((cat) => ({
+  // Mostrar apenas categorias relevantes baseado no tipo
+  const categoryOptions = (selectedType === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES).map((cat) => ({
     value: cat,
     label: cat,
   }))
@@ -122,9 +138,13 @@ export default function TransactionForm({
       {showCustomCategory && (
         <div className="transition-opacity duration-200 ease-in-out">
           <Input
-            label={t('transactions.customCategory')}
+            label={selectedType === 'income' 
+              ? t('transactions.customCategoryIncome') || 'Especifique a receita'
+              : t('transactions.customCategory')}
             type="text"
-            placeholder={t('transactions.customCategoryPlaceholder')}
+            placeholder={selectedType === 'income'
+              ? t('transactions.customCategoryIncomePlaceholder') || 'Ex: Venda de produto, Consultoria, etc.'
+              : t('transactions.customCategoryPlaceholder')}
             {...register('customCategory')}
             error={errors.customCategory?.message}
           />

@@ -82,6 +82,8 @@
     "expense": "Expense",
     "customCategory": "Specify the expense/income",
     "customCategoryPlaceholder": "Ex: Car maintenance, Gift, etc.",
+    "customCategoryIncome": "Specify the income",
+    "customCategoryIncomePlaceholder": "Ex: Product sale, Consulting, etc.",
     "deleteConfirm": "Are you sure you want to delete this transaction?",
     "deleteConfirmDesc": "This action cannot be undone.",
     "transactionLimitReached": "Transaction limit reached",

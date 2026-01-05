@@ -1,6 +1,5 @@
 // Schemas de validação com Zod
 import { z } from 'zod'
-import { DEFAULT_CATEGORIES } from '@/types'
 
 export const loginSchema = z.object({
   email: z
@@ -59,7 +58,7 @@ export const transactionSchema = z.object({
     return true
   },
   {
-    message: 'Especifique o gasto/receita quando selecionar "Outros"',
+    message: 'Especifique a categoria quando selecionar "Outros"',
     path: ['customCategory'], // Mensagem de erro aparecerá no campo customCategory
   }
 )

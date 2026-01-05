@@ -40,8 +40,8 @@ export interface TransactionFormData {
   date: string
 }
 
-// Categorias padrão
-export const DEFAULT_CATEGORIES = [
+// Categorias de despesas
+export const EXPENSE_CATEGORIES = [
   'Alimentação',
   'Moradia',
   'Transporte',
@@ -50,6 +50,36 @@ export const DEFAULT_CATEGORIES = [
   'Outros',
 ] as const
 
+// Categorias de receitas
+export const INCOME_CATEGORIES = [
+  // Principais / Fixas
+  'Salário',
+  'Pró-labore',
+  'Aposentadoria',
+  'Pensão',
+  'Bolsa / Auxílio governamental',
+  'Aluguel recebido',
+  'Renda fixa mensal',
+  // Variáveis / Complementares
+  'Horas extras',
+  'Comissões',
+  'Bônus',
+  'Participação nos lucros (PLR)',
+  'Gorjetas',
+  'Freelance',
+  'Trabalhos pontuais',
+  'Renda variável',
+  'Outros',
+] as const
+
+// Categorias padrão (mantido para compatibilidade)
+export const DEFAULT_CATEGORIES = [
+  ...EXPENSE_CATEGORIES,
+  ...INCOME_CATEGORIES.filter(cat => cat !== 'Outros'), // Remove duplicata de "Outros"
+] as const
+
+export type ExpenseCategory = typeof EXPENSE_CATEGORIES[number]
+export type IncomeCategory = typeof INCOME_CATEGORIES[number]
 export type Category = typeof DEFAULT_CATEGORIES[number]
 
 // Metas financeiras

@@ -5,6 +5,8 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useGuest } from '@/contexts/GuestContext'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { logout } from '@/services/firebase/auth'
+import { useToast } from '@/contexts/ToastContext'
 
 export default function MobileNav() {
   const pathname = usePathname()
@@ -12,6 +14,18 @@ export default function MobileNav() {
   const { user } = useAuth()
   const { isGuest } = useGuest()
   const { t } = useLanguage()
+  const { showToast } = useToast()
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      showToast(t('auth.logoutSuccess') || 'Logout realizado com sucesso', 'success')
+      router.push('/login')
+    } catch (error: any) {
+      console.error('Erro ao fazer logout:', error)
+      showToast(error.message || 'Erro ao fazer logout', 'error')
+    }
+  }
 
   // Não mostrar em páginas de auth ou landing
   if (pathname === '/' || pathname.startsWith('/login') || pathname.startsWith('/signup')) {
@@ -64,6 +78,9 @@ export default function MobileNav() {
     return pathname.startsWith(path)
   }
 
+  // Não mostrar logout para visitantes
+  const showLogout = user && !isGuest
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 pb-safe lg:hidden" aria-label="Mobile navigation">
       <div className="flex items-center justify-around h-16">
@@ -94,6 +111,21 @@ export default function MobileNav() {
             </button>
           )
         })}
+        
+        {showLogout && (
+          <button
+            onClick={handleLogout}
+            className="relative flex flex-col items-center justify-center gap-1 flex-1 h-full text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all touch-manipulation"
+            aria-label="Logout"
+          >
+            <div className="transition-transform">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </div>
+            <span className="text-[10px] font-medium">Sair</span>
+          </button>
+        )}
       </div>
     </nav>
   )
