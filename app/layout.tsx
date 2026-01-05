@@ -6,6 +6,7 @@ import Toast from '@/components/ui/Toast'
 import ThemeProviderWrapper from '@/components/providers/ThemeProviderWrapper'
 import { GuestProvider } from '@/contexts/GuestContext'
 import NavigationWrapper from '@/components/navigation/NavigationWrapper'
+import GoogleAnalytics from '@/components/analytics/GoogleAnalytics'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
+        <GoogleAnalytics />
         <ThemeProviderWrapper>
           <GuestProvider>
             <ToastProvider>
