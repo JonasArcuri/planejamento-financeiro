@@ -27,11 +27,11 @@ export default function CategoryTotals({ data }: CategoryTotalsProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
-      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 md:p-5 lg:p-6">
+      <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3 md:mb-4">
         {t('dashboard.categoryTotals')}
       </h3>
-      <div className="space-y-2 sm:space-y-3 max-h-96 overflow-y-auto scrollbar-hide">
+      <div className="space-y-2 md:space-y-3 max-h-96 overflow-y-auto scrollbar-hide">
         {data.map((item) => (
           <div
             key={item.category}

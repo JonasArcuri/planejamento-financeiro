@@ -197,11 +197,13 @@ function DashboardContent() {
         
         {/* Header Mobile-first - Simplificado */}
         <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
-          <div className="px-4">
-            <div className="flex justify-between items-center h-14">
-              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white truncate">
-                {t('dashboard.appName')}
-              </h1>
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-14 gap-4">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white truncate sm:whitespace-nowrap">
+                  {t('dashboard.appName')}
+                </h1>
+              </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 {!isGuest && <SettingsButton />}
                 {/* Informações do usuário apenas no desktop */}
@@ -239,24 +241,24 @@ function DashboardContent() {
         </nav>
 
         {/* Main Content - Mobile-first spacing com padding para bottom nav */}
-        <main className="px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8 max-w-7xl mx-auto pb-20 sm:pb-8">
+        <main className="px-4 py-4 md:px-6 md:py-5 lg:px-8 lg:py-8 max-w-6xl md:max-w-7xl mx-auto pb-20 lg:pb-8">
           {/* Título - Mobile-first */}
-          <div className="mb-4 sm:mb-6">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">{t('dashboard.title')}</h2>
-            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+          <div className="mb-4 md:mb-5 lg:mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1 md:mb-2">{t('dashboard.title')}</h2>
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
               {t('dashboard.subtitle')}
             </p>
           </div>
 
-          {/* Cards de Estatísticas - Mobile-first vertical stack */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+          {/* Cards de Estatísticas - Mobile: 1 col, Tablet: 2 col, Desktop: 3 col */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5 mb-4 md:mb-5 lg:mb-6">
             <StatCard
               title={t('dashboard.balance')}
               value={formatCurrency(balance, currency)}
               variant="balance"
               icon={
                 <svg
-                  className="w-6 h-6 sm:w-8 sm:h-8"
+                  className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -276,7 +278,7 @@ function DashboardContent() {
               variant="income"
               icon={
                 <svg
-                  className="w-6 h-6 sm:w-8 sm:h-8"
+                  className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -296,7 +298,7 @@ function DashboardContent() {
               variant="expense"
               icon={
                 <svg
-                  className="w-6 h-6 sm:w-8 sm:h-8"
+                  className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -314,7 +316,7 @@ function DashboardContent() {
 
           {/* Card de CTA para modo visitante - Mobile-first compacto */}
           {isGuest && (
-            <div className="mb-4 sm:mb-6 bg-gradient-to-br from-primary-500 to-purple-600 rounded-xl p-4 sm:p-6 text-white shadow-lg">
+            <div className="mb-4 md:mb-6 bg-gradient-to-br from-primary-500 to-purple-600 rounded-xl p-4 md:p-5 lg:p-6 text-white shadow-lg">
               <div className="flex flex-col gap-3">
                 <div>
                   <h3 className="text-base sm:text-lg font-bold mb-1.5">
@@ -359,18 +361,18 @@ function DashboardContent() {
             </div>
           )}
 
-          {/* Ações Rápidas - Simplificadas: apenas no desktop, mobile usa bottom nav */}
-          <div className="hidden sm:block mb-4 sm:mb-6">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 px-1">
+          {/* Ações Rápidas - Simplificadas: apenas no desktop/tablet, mobile usa bottom nav */}
+          <div className="hidden sm:block mb-4 md:mb-5 lg:mb-6">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3 md:mb-4 px-1">
               {t('dashboard.quickActions')}
             </h3>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
               <button
                 onClick={() => router.push('/transactions')}
-                className="flex flex-col items-center justify-center gap-2.5 h-32 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-95 touch-manipulation"
+                className="flex flex-col items-center justify-center gap-2 md:gap-2.5 h-28 md:h-32 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-95 touch-manipulation"
               >
                 <svg
-                  className="w-8 h-8 text-primary-600 dark:text-primary-400"
+                  className="w-7 h-7 md:w-8 md:h-8 text-primary-600 dark:text-primary-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -382,18 +384,18 @@ function DashboardContent() {
                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                   />
                 </svg>
-                <div className="text-center">
-                  <span className="block text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.manageTransactions')}</span>
-                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.manageTransactionsDesc')}</span>
+                <div className="text-center px-1">
+                  <span className="block text-xs md:text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.manageTransactions')}</span>
+                  <span className="block text-[10px] md:text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.manageTransactionsDesc')}</span>
                 </div>
               </button>
               
               <button
                 onClick={() => router.push('/goals')}
-                className="flex flex-col items-center justify-center gap-2.5 h-32 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-95 touch-manipulation"
+                className="flex flex-col items-center justify-center gap-2 md:gap-2.5 h-28 md:h-32 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-95 touch-manipulation"
               >
                 <svg
-                  className="w-8 h-8 text-primary-600 dark:text-primary-400"
+                  className="w-7 h-7 md:w-8 md:h-8 text-primary-600 dark:text-primary-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -405,18 +407,18 @@ function DashboardContent() {
                     d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
                   />
                 </svg>
-                <div className="text-center">
-                  <span className="block text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.manageGoals')}</span>
-                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.manageGoalsDesc')}</span>
+                <div className="text-center px-1">
+                  <span className="block text-xs md:text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.manageGoals')}</span>
+                  <span className="block text-[10px] md:text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.manageGoalsDesc')}</span>
                 </div>
               </button>
               
               <button
                 onClick={() => router.push('/reports')}
-                className="flex flex-col items-center justify-center gap-2.5 h-32 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-95 touch-manipulation"
+                className="flex flex-col items-center justify-center gap-2 md:gap-2.5 h-28 md:h-32 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-95 touch-manipulation"
               >
                 <svg
-                  className="w-8 h-8 text-primary-600 dark:text-primary-400"
+                  className="w-7 h-7 md:w-8 md:h-8 text-primary-600 dark:text-primary-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -428,9 +430,9 @@ function DashboardContent() {
                     d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                   />
                 </svg>
-                <div className="text-center">
-                  <span className="block text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.generateReport')}</span>
-                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.generateReportDesc')}</span>
+                <div className="text-center px-1">
+                  <span className="block text-xs md:text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.generateReport')}</span>
+                  <span className="block text-[10px] md:text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.generateReportDesc')}</span>
                 </div>
               </button>
             </div>
@@ -438,7 +440,7 @@ function DashboardContent() {
 
           {/* Alerta de Gastos Altos - Premium */}
           {highExpenses.some((item) => item.isHigh) && (
-            <div className="mb-4 sm:mb-6">
+            <div className="mb-4 md:mb-6">
               <FeatureLock
                 isLocked={!checkFeature('highExpensesAlert')}
                 featureName={t('dashboard.highExpensesAlert')}
@@ -450,7 +452,7 @@ function DashboardContent() {
           )}
 
           {/* Comparação Mensal - Premium */}
-          <div className="mb-4 sm:mb-6">
+          <div className="mb-4 md:mb-6">
             <FeatureLock
               isLocked={!checkFeature('monthlyComparison')}
               featureName={t('dashboard.monthlyComparison')}
@@ -465,14 +467,14 @@ function DashboardContent() {
             </FeatureLock>
           </div>
 
-          {/* Gráficos - Mobile-first responsivo */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+          {/* Gráficos - Mobile: 1 col, Tablet: 2 col, Desktop: 2 col */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6 mb-4 md:mb-5 lg:mb-6">
             <ExpensesByCategoryChart data={expensesByCategory} />
             <MonthlyComparisonChart data={monthlyComparison} />
           </div>
 
           {/* Totais por Categoria - Premium */}
-          <div className="mb-4 sm:mb-6">
+          <div className="mb-4 md:mb-6">
             <FeatureLock
               isLocked={!checkFeature('categoryTotals')}
               featureName={t('dashboard.categoryTotals')}
@@ -483,7 +485,7 @@ function DashboardContent() {
           </div>
 
           {/* Metas Financeiras */}
-          <div className="mb-4 sm:mb-6">
+          <div className="mb-4 md:mb-6">
             <GoalsSummary goals={goals} transactions={transactions} />
           </div>
         </main>

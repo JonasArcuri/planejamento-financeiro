@@ -29,7 +29,7 @@ export default function HighExpensesAlert({ highExpenses }: HighExpensesAlertPro
   }
 
   return (
-    <div className="bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-200 dark:border-orange-800 rounded-xl p-4 sm:p-6">
+    <div className="bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-200 dark:border-orange-800 rounded-xl p-4 md:p-5 lg:p-6">
       <div className="flex items-start gap-2.5 sm:gap-3">
         <div className="flex-shrink-0">
           <svg

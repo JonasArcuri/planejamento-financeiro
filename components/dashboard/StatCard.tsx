@@ -29,19 +29,19 @@ export default function StatCard({
   return (
     <div
       className={`
-        rounded-xl border-2 p-4 sm:p-6 shadow-sm
+        rounded-xl border-2 p-4 md:p-5 lg:p-6 shadow-sm
         ${variants[variant]}
       `}
     >
       <div className="flex items-center justify-between">
         <div className="flex-1 min-w-0">
-          <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">{title}</p>
-          <p className={`mt-1.5 sm:mt-2 text-2xl sm:text-3xl font-bold ${textColors[variant]} break-words`}>
+          <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">{title}</p>
+          <p className={`mt-1.5 md:mt-2 text-2xl md:text-3xl font-bold ${textColors[variant]} break-words`}>
             {value}
           </p>
         </div>
         {icon && (
-          <div className={`text-3xl sm:text-4xl ${textColors[variant]} opacity-50 flex-shrink-0 ml-2`}>
+          <div className={`text-2xl md:text-3xl lg:text-4xl ${textColors[variant]} opacity-50 flex-shrink-0 ml-2`}>
             {icon}
           </div>
         )}

@@ -70,11 +70,11 @@ export default function MonthComparison({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
-      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 md:p-5 lg:p-6">
+      <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3 md:mb-4">
         {t('dashboard.monthlyComparison')}
       </h3>
-      <div className="space-y-3 sm:space-y-4">
+      <div className="space-y-3 md:space-y-4">
         {/* Receitas */}
         <div className="flex items-center justify-between p-2.5 sm:p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
           <div className="flex-1 min-w-0">

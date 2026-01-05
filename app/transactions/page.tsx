@@ -131,14 +131,47 @@ export default function TransactionsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 sm:pb-0">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-32 lg:pb-0">
         <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
           <div className="px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-14 items-center">
-              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                {t('transactions.title')}
-              </h1>
+            <div className="flex justify-between h-14 items-center gap-4">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white whitespace-nowrap">
+                  {t('transactions.title')}
+                </h1>
+                {/* Botão Voltar para Dashboard - Desktop */}
+                <button
+                  onClick={() => router.push('/dashboard')}
+                  className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                  aria-label={t('common.dashboard')}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  <span>{t('common.dashboard')}</span>
+                </button>
+              </div>
               <div className="flex items-center gap-2">
+                {/* Botão Relatório - Ícone no mobile, texto no desktop */}
+                <button
+                  onClick={() => router.push('/reports')}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-manipulation sm:hidden"
+                  aria-label={t('reports.title')}
+                >
+                  <svg
+                    className="w-6 h-6 text-gray-700 dark:text-gray-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    />
+                  </svg>
+                </button>
                 {!isGuest && <SettingsButton />}
                 {/* Informações apenas no desktop */}
                 <div className="hidden md:flex items-center gap-2">
@@ -161,7 +194,7 @@ export default function TransactionsPage() {
           </div>
         </nav>
 
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-5xl md:max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-5 lg:py-8">
           {/* Aviso de limite no modo visitante */}
           {isGuest && (() => {
             const count = getGuestTransactionCount()
@@ -200,7 +233,8 @@ export default function TransactionsPage() {
             return null
           })()}
 
-          <div className="flex justify-between items-center mb-6">
+          {/* Header com título e ações - Desktop */}
+          <div className="hidden sm:flex justify-between items-center mb-6">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {t('transactions.yourTransactions')}
@@ -234,6 +268,16 @@ export default function TransactionsPage() {
                 {t('transactions.newTransaction')}
               </Button>
             </div>
+          </div>
+
+          {/* Header simplificado - Mobile */}
+          <div className="sm:hidden mb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              {t('transactions.yourTransactions')}
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              {t('transactions.subtitle')}
+            </p>
           </div>
 
           <TransactionList
@@ -275,6 +319,27 @@ export default function TransactionsPage() {
             transactionCategory={selectedTransaction?.category}
           />
         </main>
+
+        {/* FAB (Floating Action Button) - Mobile Only */}
+        <button
+          onClick={handleCreate}
+          className="fixed bottom-24 right-4 lg:hidden z-50 w-14 h-14 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95 touch-manipulation flex items-center justify-center mb-safe"
+          aria-label={t('transactions.newTransaction')}
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+        </button>
       </div>
     </ProtectedRoute>
   )

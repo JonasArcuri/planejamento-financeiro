@@ -127,14 +127,27 @@ export default function ReportsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 sm:pb-0">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 lg:pb-0">
         {/* Navegação Simplificada */}
         <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
           <div className="px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-14 items-center">
-              <h1 className="text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-400">
-                {t('reports.title')}
-              </h1>
+            <div className="flex justify-between h-14 items-center gap-4">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <h1 className="text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-400 whitespace-nowrap">
+                  {t('reports.title')}
+                </h1>
+                {/* Botão Voltar para Dashboard - Desktop */}
+                <button
+                  onClick={() => router.push('/dashboard')}
+                  className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                  aria-label={t('common.dashboard')}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  <span>{t('common.dashboard')}</span>
+                </button>
+              </div>
               <div className="flex items-center gap-2">
                 <SettingsButton />
                 {/* Informações apenas no desktop */}
@@ -150,16 +163,16 @@ export default function ReportsPage() {
           </div>
         </nav>
 
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('reports.title')}</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+        <main className="max-w-5xl md:max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-5 lg:py-8">
+          <div className="mb-4 md:mb-5 lg:mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">{t('reports.title')}</h2>
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-1">
               {t('reports.subtitle')}
             </p>
           </div>
 
           {/* Filtro de Mês/Ano */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-5 lg:p-6 mb-4 md:mb-5 lg:mb-6">
             <MonthYearFilter
               onFilterChange={handleFilterChange}
               defaultMonth={selectedMonth}
@@ -168,46 +181,46 @@ export default function ReportsPage() {
           </div>
 
           {/* Resumo do Período */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-5 lg:p-6 mb-4 md:mb-5 lg:mb-6">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3 md:mb-4">
               {t('reports.summary')} - {monthNames[selectedMonth - 1]}/{selectedYear}
             </h3>
 
             {filteredTransactions.length === 0 ? (
-              <div className="text-center py-8">
+              <div className="text-center py-6 md:py-8">
                 <p className="text-gray-500 dark:text-gray-400">{t('reports.noTransactions')}</p>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                  <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                    <p className="text-sm text-green-700 dark:text-green-400 font-medium">{t('reports.totalIncome')}</p>
-                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-5">
+                  <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 md:p-4 border border-green-200 dark:border-green-800">
+                    <p className="text-xs md:text-sm text-green-700 dark:text-green-400 font-medium mb-1">{t('reports.totalIncome')}</p>
+                    <p className="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400">
                       {formatCurrency(totalIncome)}
                     </p>
                   </div>
-                  <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
-                    <p className="text-sm text-red-700 dark:text-red-400 font-medium">{t('reports.totalExpenses')}</p>
-                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                  <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 md:p-4 border border-red-200 dark:border-red-800">
+                    <p className="text-xs md:text-sm text-red-700 dark:text-red-400 font-medium mb-1">{t('reports.totalExpenses')}</p>
+                    <p className="text-xl md:text-2xl font-bold text-red-600 dark:text-red-400">
                       {formatCurrency(totalExpenses)}
                     </p>
                   </div>
                   <div
-                    className={`rounded-lg p-4 border ${
+                    className={`rounded-lg p-3 md:p-4 border ${
                       balance >= 0
                         ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
                         : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
                     }`}
                   >
                     <p
-                      className={`text-sm font-medium ${
+                      className={`text-xs md:text-sm font-medium mb-1 ${
                         balance >= 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
                       }`}
                     >
                       {t('reports.finalBalance')}
                     </p>
                     <p
-                      className={`text-2xl font-bold ${
+                      className={`text-xl md:text-2xl font-bold ${
                         balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       }`}
                     >

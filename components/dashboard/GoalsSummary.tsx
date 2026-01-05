@@ -21,7 +21,7 @@ export default function GoalsSummary({ goals, transactions }: GoalsSummaryProps)
 
   if (goals.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-5 lg:p-6">
         <div className="text-center">
           <svg
             className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-3"
