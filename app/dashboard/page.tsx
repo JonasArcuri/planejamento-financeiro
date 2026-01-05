@@ -165,33 +165,27 @@ function DashboardContent() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        {/* Aviso do modo visitante */}
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-safe">
+        {/* Aviso do modo visitante - Mobile-first compacto */}
         {isGuest && (
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/30 dark:to-orange-900/30 border-b-2 border-yellow-300 dark:border-yellow-700">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="flex items-start gap-3 flex-1">
-                  <div className="flex-shrink-0 mt-0.5">
-                    <svg className="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-yellow-900 dark:text-yellow-200 mb-1">
-                      {t('dashboard.guestWarning')}
-                    </p>
-                    <p className="text-sm text-yellow-800 dark:text-yellow-300">
-                      {t('dashboard.guestWarningMessage')}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-2 w-full sm:w-auto">
+          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/30 dark:to-orange-900/30 border-b border-yellow-300 dark:border-yellow-700">
+            <div className="px-4 py-3">
+              <div className="flex items-start gap-2.5">
+                <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-yellow-900 dark:text-yellow-200 mb-0.5">
+                    {t('dashboard.guestWarning')}
+                  </p>
+                  <p className="text-xs text-yellow-800 dark:text-yellow-300 leading-relaxed">
+                    {t('dashboard.guestWarningMessage')}
+                  </p>
                   <Button
                     variant="primary"
                     size="sm"
                     onClick={() => router.push('/signup')}
-                    className="flex-1 sm:flex-none"
+                    className="mt-2 text-xs px-3 py-1.5"
                   >
                     {t('dashboard.guestCtaCreateAccount')}
                   </Button>
@@ -200,59 +194,69 @@ function DashboardContent() {
             </div>
           </div>
         )}
-        <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16 items-center">
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+        
+        {/* Header Mobile-first - Simplificado */}
+        <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+          <div className="px-4">
+            <div className="flex justify-between items-center h-14">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white truncate">
                 {t('dashboard.appName')}
               </h1>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 {!isGuest && <SettingsButton />}
-                <span className="text-sm text-gray-600 dark:text-gray-300">
-                  {isGuest ? 'Visitante' : (userData?.name || user?.email)}
-                </span>
-                {!isGuest && !isPremium && (
-                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
-                    Free
+                {/* Informações do usuário apenas no desktop */}
+                <div className="hidden md:flex items-center gap-2">
+                  <span className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-[120px]">
+                    {isGuest ? 'Visitante' : (userData?.name || user?.email?.split('@')[0])}
                   </span>
-                )}
-                {!isGuest && isPremium && (
-                  <span className="px-2 py-1 text-xs font-medium bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded">
-                    Premium
-                  </span>
-                )}
-                {!isGuest && (
-                  <Button variant="outline" size="sm" onClick={handleLogout}>
-                    {t('common.logout')}
-                  </Button>
-                )}
-                {isGuest && (
-                  <Button variant="outline" size="sm" onClick={() => router.push('/login')}>
-                    Entrar
-                  </Button>
-                )}
+                  {!isGuest && !isPremium && (
+                    <span className="px-2 py-0.5 text-[10px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
+                      Free
+                    </span>
+                  )}
+                  {!isGuest && isPremium && (
+                    <span className="px-2 py-0.5 text-[10px] font-medium bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded">
+                      Premium
+                    </span>
+                  )}
+                </div>
+                {/* Botão logout apenas no desktop - mobile usa menu */}
+                <div className="hidden md:block">
+                  {!isGuest && (
+                    <Button variant="outline" size="sm" onClick={handleLogout} className="text-xs px-2 py-1">
+                      {t('common.logout')}
+                    </Button>
+                  )}
+                  {isGuest && (
+                    <Button variant="outline" size="sm" onClick={() => router.push('/login')} className="text-xs px-2 py-1">
+                      Entrar
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </nav>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{t('dashboard.title')}</h2>
-            <p className="text-gray-600 dark:text-gray-400">
+        {/* Main Content - Mobile-first spacing com padding para bottom nav */}
+        <main className="px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8 max-w-7xl mx-auto pb-20 sm:pb-8">
+          {/* Título - Mobile-first */}
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">{t('dashboard.title')}</h2>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
               {t('dashboard.subtitle')}
             </p>
           </div>
 
-          {/* Cards de Estatísticas */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Cards de Estatísticas - Mobile-first vertical stack */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
             <StatCard
               title={t('dashboard.balance')}
               value={formatCurrency(balance, currency)}
               variant="balance"
               icon={
                 <svg
-                  className="w-8 h-8"
+                  className="w-6 h-6 sm:w-8 sm:h-8"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -272,7 +276,7 @@ function DashboardContent() {
               variant="income"
               icon={
                 <svg
-                  className="w-8 h-8"
+                  className="w-6 h-6 sm:w-8 sm:h-8"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -292,7 +296,7 @@ function DashboardContent() {
               variant="expense"
               icon={
                 <svg
-                  className="w-8 h-8"
+                  className="w-6 h-6 sm:w-8 sm:h-8"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -308,15 +312,15 @@ function DashboardContent() {
             />
           </div>
 
-          {/* Card de CTA para modo visitante */}
+          {/* Card de CTA para modo visitante - Mobile-first compacto */}
           {isGuest && (
-            <div className="mb-8 bg-gradient-to-br from-primary-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-2">
+            <div className="mb-4 sm:mb-6 bg-gradient-to-br from-primary-500 to-purple-600 rounded-xl p-4 sm:p-6 text-white shadow-lg">
+              <div className="flex flex-col gap-3">
+                <div>
+                  <h3 className="text-base sm:text-lg font-bold mb-1.5">
                     {t('dashboard.guestCtaSaveData')}
                   </h3>
-                  <p className="text-primary-100 mb-1">
+                  <p className="text-xs sm:text-sm text-primary-100 leading-relaxed">
                     {(() => {
                       const count = getGuestTransactionCount()
                       return count > 0 
@@ -328,14 +332,14 @@ function DashboardContent() {
                     const count = getGuestTransactionCount()
                     if (count > 0 && count < 3) {
                       return (
-                        <p className="text-sm text-primary-200 mt-2">
+                        <p className="text-xs text-primary-200 mt-1.5">
                           {t('dashboard.guestLimitWarning').replace('{count}', String(count))}
                         </p>
                       )
                     }
                     if (count >= 3) {
                       return (
-                        <p className="text-sm font-semibold text-yellow-200 mt-2">
+                        <p className="text-xs font-semibold text-yellow-200 mt-1.5">
                           {t('dashboard.guestLimitReached')}
                         </p>
                       )
@@ -345,9 +349,9 @@ function DashboardContent() {
                 </div>
                 <Button
                   variant="secondary"
-                  size="lg"
+                  size="md"
                   onClick={() => router.push('/signup')}
-                  className="bg-white text-primary-600 hover:bg-primary-50 font-semibold whitespace-nowrap"
+                  className="bg-white text-primary-600 hover:bg-primary-50 font-semibold w-full sm:w-auto sm:self-start"
                 >
                   {t('dashboard.guestCtaCreateAccount')}
                 </Button>
@@ -355,16 +359,15 @@ function DashboardContent() {
             </div>
           )}
 
-          {/* Ações Rápidas */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-8 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          {/* Ações Rápidas - Simplificadas: apenas no desktop, mobile usa bottom nav */}
+          <div className="hidden sm:block mb-4 sm:mb-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 px-1">
               {t('dashboard.quickActions')}
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button
-                variant="outline"
+            <div className="grid grid-cols-3 gap-4">
+              <button
                 onClick={() => router.push('/transactions')}
-                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 dark:hover:border-primary-600 transition-all"
+                className="flex flex-col items-center justify-center gap-2.5 h-32 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-95 touch-manipulation"
               >
                 <svg
                   className="w-8 h-8 text-primary-600 dark:text-primary-400"
@@ -379,14 +382,15 @@ function DashboardContent() {
                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                   />
                 </svg>
-                <span className="font-medium text-gray-900 dark:text-white">{t('dashboard.manageTransactions')}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.manageTransactionsDesc')}</span>
-              </Button>
+                <div className="text-center">
+                  <span className="block text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.manageTransactions')}</span>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.manageTransactionsDesc')}</span>
+                </div>
+              </button>
               
-              <Button
-                variant="outline"
+              <button
                 onClick={() => router.push('/goals')}
-                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 dark:hover:border-primary-600 transition-all"
+                className="flex flex-col items-center justify-center gap-2.5 h-32 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-95 touch-manipulation"
               >
                 <svg
                   className="w-8 h-8 text-primary-600 dark:text-primary-400"
@@ -401,14 +405,15 @@ function DashboardContent() {
                     d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
                   />
                 </svg>
-                <span className="font-medium text-gray-900 dark:text-white">{t('dashboard.manageGoals')}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.manageGoalsDesc')}</span>
-              </Button>
+                <div className="text-center">
+                  <span className="block text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.manageGoals')}</span>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.manageGoalsDesc')}</span>
+                </div>
+              </button>
               
-              <Button
-                variant="outline"
+              <button
                 onClick={() => router.push('/reports')}
-                className="flex flex-col items-center justify-center gap-3 h-32 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 dark:hover:border-primary-600 transition-all"
+                className="flex flex-col items-center justify-center gap-2.5 h-32 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-95 touch-manipulation"
               >
                 <svg
                   className="w-8 h-8 text-primary-600 dark:text-primary-400"
@@ -423,15 +428,17 @@ function DashboardContent() {
                     d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                   />
                 </svg>
-                <span className="font-medium text-gray-900 dark:text-white">{t('dashboard.generateReport')}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.generateReportDesc')}</span>
-              </Button>
+                <div className="text-center">
+                  <span className="block text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.generateReport')}</span>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.generateReportDesc')}</span>
+                </div>
+              </button>
             </div>
           </div>
 
           {/* Alerta de Gastos Altos - Premium */}
           {highExpenses.some((item) => item.isHigh) && (
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <FeatureLock
                 isLocked={!checkFeature('highExpensesAlert')}
                 featureName={t('dashboard.highExpensesAlert')}
@@ -443,7 +450,7 @@ function DashboardContent() {
           )}
 
           {/* Comparação Mensal - Premium */}
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <FeatureLock
               isLocked={!checkFeature('monthlyComparison')}
               featureName={t('dashboard.monthlyComparison')}
@@ -458,14 +465,14 @@ function DashboardContent() {
             </FeatureLock>
           </div>
 
-          {/* Gráficos */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Gráficos - Mobile-first responsivo */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
             <ExpensesByCategoryChart data={expensesByCategory} />
             <MonthlyComparisonChart data={monthlyComparison} />
           </div>
 
           {/* Totais por Categoria - Premium */}
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <FeatureLock
               isLocked={!checkFeature('categoryTotals')}
               featureName={t('dashboard.categoryTotals')}
@@ -476,7 +483,7 @@ function DashboardContent() {
           </div>
 
           {/* Metas Financeiras */}
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <GoalsSummary goals={goals} transactions={transactions} />
           </div>
         </main>

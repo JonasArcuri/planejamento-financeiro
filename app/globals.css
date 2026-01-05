@@ -27,3 +27,22 @@ body {
   animation: slide-in 0.3s ease-out;
 }
 
+/* Mobile-first utilities */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Safe area padding for iOS */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+

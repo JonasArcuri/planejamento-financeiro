@@ -70,74 +70,74 @@ export default function MonthComparison({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
         {t('dashboard.monthlyComparison')}
       </h3>
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {/* Receitas */}
-        <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-300">{t('transactions.income')}</p>
-            <p className="text-lg font-semibold text-green-700 dark:text-green-400">
+        <div className="flex items-center justify-between p-2.5 sm:p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">{t('transactions.income')}</p>
+            <p className="text-base sm:text-lg font-semibold text-green-700 dark:text-green-400">
               {formatCurrency(current.income, currency)}
             </p>
             {previous.income > 0 && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 Mês anterior: {formatCurrency(previous.income, currency)}
               </p>
             )}
           </div>
           {previous.income > 0 && (
-            <div className={`flex items-center gap-1 ${getPercentColor(percent.income)}`}>
+            <div className={`flex items-center gap-1 flex-shrink-0 ml-2 ${getPercentColor(percent.income)}`}>
               {getPercentIcon(percent.income)}
-              <span className="font-medium">{formatPercent(percent.income)}</span>
+              <span className="text-xs sm:text-sm font-medium">{formatPercent(percent.income)}</span>
             </div>
           )}
         </div>
 
         {/* Despesas */}
-        <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-300">{t('transactions.expense')}</p>
-            <p className="text-lg font-semibold text-red-700 dark:text-red-400">
+        <div className="flex items-center justify-between p-2.5 sm:p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">{t('transactions.expense')}</p>
+            <p className="text-base sm:text-lg font-semibold text-red-700 dark:text-red-400">
               {formatCurrency(current.expense, currency)}
             </p>
             {previous.expense > 0 && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 Mês anterior: {formatCurrency(previous.expense, currency)}
               </p>
             )}
           </div>
           {previous.expense > 0 && (
-            <div className={`flex items-center gap-1 ${getPercentColor(percent.expense, true)}`}>
+            <div className={`flex items-center gap-1 flex-shrink-0 ml-2 ${getPercentColor(percent.expense, true)}`}>
               {getPercentIcon(percent.expense)}
-              <span className="font-medium">{formatPercent(percent.expense)}</span>
+              <span className="text-xs sm:text-sm font-medium">{formatPercent(percent.expense)}</span>
             </div>
           )}
         </div>
 
         {/* Saldo */}
-        <div className={`flex items-center justify-between p-3 rounded-lg ${
+        <div className={`flex items-center justify-between p-2.5 sm:p-3 rounded-lg ${
           current.balance >= 0 ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-orange-50 dark:bg-orange-900/20'
         }`}>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-300">{t('dashboard.balance')}</p>
-            <p className={`text-lg font-semibold ${
+          <div className="flex-1 min-w-0">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">{t('dashboard.balance')}</p>
+            <p className={`text-base sm:text-lg font-semibold ${
               current.balance >= 0 ? 'text-blue-700 dark:text-blue-400' : 'text-orange-700 dark:text-orange-400'
             }`}>
               {formatCurrency(current.balance, currency)}
             </p>
             {previous.balance !== 0 && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 Mês anterior: {formatCurrency(previous.balance, currency)}
               </p>
             )}
           </div>
           {previous.balance !== 0 && (
-            <div className={`flex items-center gap-1 ${getPercentColor(percent.balance)}`}>
+            <div className={`flex items-center gap-1 flex-shrink-0 ml-2 ${getPercentColor(percent.balance)}`}>
               {getPercentIcon(percent.balance)}
-              <span className="font-medium">{formatPercent(percent.balance)}</span>
+              <span className="text-xs sm:text-sm font-medium">{formatPercent(percent.balance)}</span>
             </div>
           )}
         </div>

@@ -116,8 +116,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <div className="w-full max-w-md mx-auto px-4 sm:px-0">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
         {!isLogin && (
           <Input
             label="Nome"

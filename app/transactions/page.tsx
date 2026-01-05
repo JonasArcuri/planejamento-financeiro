@@ -131,46 +131,31 @@ export default function TransactionsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16 items-center">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => router.push('/dashboard')}
-                  className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
-                >
-                  {t('common.dashboard')}
-                </button>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  {t('transactions.title')}
-                </h1>
-              </div>
-              <div className="flex items-center gap-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 sm:pb-0">
+        <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-14 items-center">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                {t('transactions.title')}
+              </h1>
+              <div className="flex items-center gap-2">
                 {!isGuest && <SettingsButton />}
-                <span className="text-sm text-gray-600 dark:text-gray-300">
-                  {isGuest ? 'Visitante' : (userData?.name || user?.email)}
-                </span>
-                {!isGuest && !isPremium && (
-                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
-                    Free
+                {/* Informações apenas no desktop */}
+                <div className="hidden md:flex items-center gap-2">
+                  <span className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-[120px]">
+                    {isGuest ? 'Visitante' : (userData?.name || user?.email?.split('@')[0])}
                   </span>
-                )}
-                {!isGuest && isPremium && (
-                  <span className="px-2 py-1 text-xs font-medium bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded">
-                    Premium
-                  </span>
-                )}
-                {!isGuest && (
-                  <Button variant="outline" size="sm" onClick={handleLogout}>
-                    {t('common.logout')}
-                  </Button>
-                )}
-                {isGuest && (
-                  <Button variant="primary" size="sm" onClick={() => router.push('/signup')}>
-                    {t('dashboard.guestCtaCreateAccount')}
-                  </Button>
-                )}
+                  {!isGuest && !isPremium && (
+                    <span className="px-2 py-0.5 text-[10px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
+                      Free
+                    </span>
+                  )}
+                  {!isGuest && isPremium && (
+                    <span className="px-2 py-0.5 text-[10px] font-medium bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded">
+                      Premium
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -131,27 +131,19 @@ export default function GoalsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16 items-center">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => router.push('/dashboard')}
-                  className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
-                >
-                  Dashboard
-                </button>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t('goals.title')}</h1>
-              </div>
-              <div className="flex items-center gap-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 sm:pb-0">
+        <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-14 items-center">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{t('goals.title')}</h1>
+              <div className="flex items-center gap-2">
                 <SettingsButton />
-                <span className="text-sm text-gray-600 dark:text-gray-300">
-                  {userData?.name || user?.email}
-                </span>
-                <Button variant="outline" size="sm" onClick={handleLogout}>
-                  {t('common.logout')}
-                </Button>
+                {/* Informações apenas no desktop */}
+                <div className="hidden md:flex items-center gap-2">
+                  <span className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-[120px]">
+                    {userData?.name || user?.email?.split('@')[0]}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

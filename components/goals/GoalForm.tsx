@@ -80,7 +80,7 @@ export default function GoalForm({
   const minDate = new Date().toISOString().split('T')[0]
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 sm:space-y-5">
       <Input
         label={t('goals.goalTitle')}
         type="text"
@@ -108,18 +108,18 @@ export default function GoalForm({
       />
 
       <div className="w-full">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-1">
           {t('goals.description')}
         </label>
         <textarea
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
-          rows={3}
+          className="w-full px-4 py-3 sm:py-2.5 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-base text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 transition-all resize-y min-h-[100px]"
+          rows={4}
           placeholder={t('goals.descriptionPlaceholder')}
           {...register('description')}
         />
       </div>
 
-      <div className="flex gap-3 pt-4">
+      <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <Button
           type="submit"
           variant="primary"

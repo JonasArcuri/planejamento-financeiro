@@ -17,19 +17,19 @@ export default function Button({
   children,
   ...props
 }: ButtonProps) {
-  const baseStyles = 'font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed'
+  const baseStyles = 'font-medium rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation active:scale-[0.98]'
   
   const variants = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 dark:bg-primary-500 dark:hover:bg-primary-600',
-    secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 dark:bg-gray-500 dark:hover:bg-gray-600',
+    primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 dark:bg-primary-500 dark:hover:bg-primary-600 shadow-sm hover:shadow-md',
+    secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 dark:bg-gray-500 dark:hover:bg-gray-600 shadow-sm hover:shadow-md',
     outline: 'border-2 border-primary-600 text-primary-600 hover:bg-primary-50 focus:ring-primary-500 dark:border-primary-500 dark:text-primary-400 dark:hover:bg-primary-900/20',
     ghost: 'text-primary-600 hover:bg-primary-50 focus:ring-primary-500 dark:text-primary-400 dark:hover:bg-primary-900/20',
   }
   
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+    sm: 'px-3 py-2.5 text-sm min-h-[44px] sm:min-h-[36px]',
+    md: 'px-5 py-3 text-base min-h-[48px] sm:min-h-[44px]',
+    lg: 'px-6 py-4 text-lg min-h-[52px] sm:min-h-[48px]',
   }
 
   return (

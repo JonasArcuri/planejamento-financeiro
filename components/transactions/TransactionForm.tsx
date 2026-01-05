@@ -95,7 +95,7 @@ export default function TransactionForm({
   }))
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 sm:space-y-5">
       <Select
         label={t('transactions.type')}
         {...register('type')}
@@ -140,7 +140,7 @@ export default function TransactionForm({
         error={errors.date?.message}
       />
 
-      <div className="flex gap-3 pt-4">
+      <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <Button
           type="submit"
           variant="primary"

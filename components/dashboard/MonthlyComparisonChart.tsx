@@ -40,17 +40,20 @@ export default function MonthlyComparisonChart({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
         {t('dashboard.monthlyChart')}
       </h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
           <XAxis 
             dataKey="month" 
-            tick={{ fill: textColor }}
+            tick={{ fill: textColor, fontSize: 12 }}
             stroke={gridColor}
+            angle={-45}
+            textAnchor="end"
+            height={60}
           />
           <YAxis
             tick={{ fill: textColor }}

@@ -29,11 +29,11 @@ export default function HighExpensesAlert({ highExpenses }: HighExpensesAlertPro
   }
 
   return (
-    <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-6">
-      <div className="flex items-start gap-3">
+    <div className="bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-200 dark:border-orange-800 rounded-xl p-4 sm:p-6">
+      <div className="flex items-start gap-2.5 sm:gap-3">
         <div className="flex-shrink-0">
           <svg
-            className="w-6 h-6 text-orange-600"
+            className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600 dark:text-orange-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -46,34 +46,34 @@ export default function HighExpensesAlert({ highExpenses }: HighExpensesAlertPro
             />
           </svg>
         </div>
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-orange-900 mb-2">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-base sm:text-lg font-semibold text-orange-900 dark:text-orange-200 mb-1.5 sm:mb-2">
             Gastos Altos Detectados
           </h3>
-          <p className="text-sm text-orange-700 mb-3">
+          <p className="text-xs sm:text-sm text-orange-700 dark:text-orange-300 mb-3">
             As seguintes despesas estão acima de 150% da média mensal:
           </p>
           <div className="space-y-2">
             {expenses.slice(0, 5).map((item) => (
               <div
                 key={item.transaction.id}
-                className="flex items-center justify-between p-2 bg-white rounded border border-orange-200"
+                className="flex items-center justify-between gap-2 p-2.5 sm:p-3 bg-white dark:bg-gray-800 rounded-lg border border-orange-200 dark:border-orange-800"
               >
-                <div>
-                  <p className="font-medium text-gray-900">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate">
                     {item.transaction.category === 'Outros' && item.transaction.customCategory
                       ? `Outros - ${item.transaction.customCategory}`
                       : item.transaction.category}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                     {formatDate(item.transaction.date)}
                   </p>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-orange-600">
+                <div className="text-right flex-shrink-0">
+                  <p className="text-sm sm:text-base font-bold text-orange-600 dark:text-orange-400">
                     {formatCurrency(item.transaction.amount, currency)}
                   </p>
-                  <p className="text-xs text-orange-500">
+                  <p className="text-xs text-orange-500 dark:text-orange-400">
                     {item.percentage}% da média
                   </p>
                 </div>
@@ -81,7 +81,7 @@ export default function HighExpensesAlert({ highExpenses }: HighExpensesAlertPro
             ))}
           </div>
           {expenses.length > 5 && (
-            <p className="text-xs text-orange-600 mt-2">
+            <p className="text-xs text-orange-600 dark:text-orange-400 mt-2">
               +{expenses.length - 5} outros gastos altos
             </p>
           )}

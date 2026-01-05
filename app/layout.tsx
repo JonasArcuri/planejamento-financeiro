@@ -5,6 +5,7 @@ import { ToastProvider } from '@/contexts/ToastContext'
 import Toast from '@/components/ui/Toast'
 import ThemeProviderWrapper from '@/components/providers/ThemeProviderWrapper'
 import { GuestProvider } from '@/contexts/GuestContext'
+import NavigationWrapper from '@/components/navigation/NavigationWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,6 +27,7 @@ export default function RootLayout({
             <ToastProvider>
               {children}
               <Toast />
+              <NavigationWrapper />
             </ToastProvider>
           </GuestProvider>
         </ThemeProviderWrapper>

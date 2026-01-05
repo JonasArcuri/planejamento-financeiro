@@ -127,44 +127,30 @@ export default function ReportsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        {/* Navegação */}
-        <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex items-center">
-                <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">
-                  Planejamento Financeiro
-                </h1>
-              </div>
-              <div className="flex items-center gap-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 sm:pb-0">
+        {/* Navegação Simplificada */}
+        <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-14 items-center">
+              <h1 className="text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-400">
+                {t('reports.title')}
+              </h1>
+              <div className="flex items-center gap-2">
                 <SettingsButton />
-                <Button variant="ghost" onClick={() => router.push('/dashboard')}>
-                  {t('common.dashboard')}
-                </Button>
-                <Button variant="ghost" onClick={() => router.push('/transactions')}>
-                  {t('common.transactions')}
-                </Button>
-                <Button variant="ghost" onClick={() => router.push('/goals')}>
-                  {t('common.goals')}
-                </Button>
-                <Button variant="ghost" onClick={() => router.push('/reports')}>
-                  {t('common.reports')}
-                </Button>
-                {userData?.plan === 'premium' && (
-                  <span className="px-2 py-1 text-xs font-semibold text-white bg-primary-600 rounded">
-                    Premium
-                  </span>
-                )}
-                <Button variant="outline" onClick={handleLogout}>
-                  {t('common.logout')}
-                </Button>
+                {/* Informações apenas no desktop */}
+                <div className="hidden md:flex items-center gap-2">
+                  {userData?.plan === 'premium' && (
+                    <span className="px-2 py-0.5 text-[10px] font-medium bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded">
+                      Premium
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </nav>
 
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('reports.title')}</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">

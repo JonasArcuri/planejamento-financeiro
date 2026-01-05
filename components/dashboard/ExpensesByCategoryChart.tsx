@@ -37,11 +37,11 @@ export default function ExpensesByCategoryChart({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
         {t('dashboard.expensesByCategory')}
       </h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie
             data={data}
@@ -51,7 +51,7 @@ export default function ExpensesByCategoryChart({
             label={({ name, percent }) =>
               `${name}: ${(percent * 100).toFixed(0)}%`
             }
-            outerRadius={80}
+            outerRadius={60}
             fill="#8884d8"
             dataKey="value"
           >
