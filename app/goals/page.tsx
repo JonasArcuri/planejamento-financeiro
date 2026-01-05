@@ -307,7 +307,9 @@ export default function GoalsPage() {
         {/* FAB (Floating Action Button) - Mobile Only */}
         <button
           onClick={handleCreate}
-          className="fixed bottom-24 right-4 lg:hidden z-50 w-14 h-14 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95 touch-manipulation flex items-center justify-center mb-safe"
+          className={`fixed bottom-24 right-4 lg:hidden z-50 w-14 h-14 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95 touch-manipulation flex items-center justify-center mb-safe ${
+            isFormOpen || isDeleteModalOpen || isAddMoneyModalOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
           aria-label={t('goals.newGoal')}
         >
           <svg

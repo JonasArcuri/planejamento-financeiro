@@ -2,13 +2,14 @@
 
 // Formulário de transação (criar/editar)
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { transactionSchema, type TransactionFormData } from '@/lib/validations'
 import { DEFAULT_CATEGORIES } from '@/types'
 import { Transaction } from '@/types'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
+import CurrencyInput from '@/components/ui/CurrencyInput'
 import Button from '@/components/ui/Button'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -31,6 +32,7 @@ export default function TransactionForm({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
     watch,
@@ -49,7 +51,7 @@ export default function TransactionForm({
           type: 'expense',
           category: '',
           customCategory: '',
-          amount: 0,
+          amount: undefined,
           date: new Date().toISOString().split('T')[0],
         },
   })
@@ -80,7 +82,13 @@ export default function TransactionForm({
   const handleFormSubmit = async (data: TransactionFormData) => {
     await onSubmit(data)
     if (!isEditing) {
-      reset()
+      reset({
+        type: 'expense',
+        category: '',
+        customCategory: '',
+        amount: undefined,
+        date: new Date().toISOString().split('T')[0],
+      })
     }
   }
 
@@ -123,14 +131,17 @@ export default function TransactionForm({
         </div>
       )}
 
-      <Input
-        label={t('transactions.amount')}
-        type="number"
-        step="0.01"
-        min="0.01"
-        placeholder="0.00"
-        {...register('amount', { valueAsNumber: true })}
-        error={errors.amount?.message}
+      <Controller
+        name="amount"
+        control={control}
+        render={({ field }) => (
+          <CurrencyInput
+            label={t('transactions.amount')}
+            value={field.value}
+            onChange={(value) => field.onChange(value)}
+            error={errors.amount?.message}
+          />
+        )}
       />
 
       <Input

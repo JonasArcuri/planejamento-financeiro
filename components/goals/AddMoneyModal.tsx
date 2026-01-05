@@ -2,12 +2,12 @@
 
 // Modal para adicionar dinheiro à meta
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Goal } from '@/types'
 import { formatCurrency } from '@/lib/currency'
-import Input from '@/components/ui/Input'
+import CurrencyInput from '@/components/ui/CurrencyInput'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import { useLanguage } from '@/contexts/LanguageContext'
@@ -41,6 +41,7 @@ export default function AddMoneyModal({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
     watch,
@@ -48,7 +49,7 @@ export default function AddMoneyModal({
   } = useForm<{ amount: number; fromBalance: boolean }>({
     resolver: zodResolver(addMoneySchema),
     defaultValues: {
-      amount: 0,
+      amount: undefined,
       fromBalance: false,
     },
   })
@@ -90,22 +91,24 @@ export default function AddMoneyModal({
           </div>
         ) : (
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-            <Input
-              label={t('goals.amountToAdd')}
-              type="number"
-              step="0.01"
-              min="0.01"
-              max={maxAmount > 0 ? maxAmount : undefined}
-              placeholder="0.00"
-              {...register('amount', { 
-                valueAsNumber: true,
+            <Controller
+              name="amount"
+              control={control}
+              rules={{
                 validate: (value) => {
-                  if (value <= 0) return 'Valor deve ser maior que zero'
+                  if (!value || value <= 0) return 'Valor deve ser maior que zero'
                   if (value > maxAmount) return `Valor não pode exceder ${formatCurrency(maxAmount, currency)}`
                   return true
                 }
-              })}
-              error={errors.amount?.message}
+              }}
+              render={({ field }) => (
+                <CurrencyInput
+                  label={t('goals.amountToAdd')}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  error={errors.amount?.message}
+                />
+              )}
             />
 
             <div className="space-y-3">

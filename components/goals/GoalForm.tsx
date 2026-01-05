@@ -2,11 +2,12 @@
 
 // Formulário de meta financeira
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Goal, GoalFormData } from '@/types'
 import Input from '@/components/ui/Input'
+import CurrencyInput from '@/components/ui/CurrencyInput'
 import Button from '@/components/ui/Button'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -39,6 +40,7 @@ export default function GoalForm({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
   } = useForm<GoalFormData>({
@@ -52,7 +54,7 @@ export default function GoalForm({
         }
       : {
           title: '',
-          targetAmount: 0,
+          targetAmount: undefined,
           deadline: '',
           description: '',
         },
@@ -72,7 +74,12 @@ export default function GoalForm({
   const handleFormSubmit = async (data: GoalFormData) => {
     await onSubmit(data)
     if (!isEditing) {
-      reset()
+      reset({
+        title: '',
+        targetAmount: undefined,
+        deadline: '',
+        description: '',
+      })
     }
   }
 
@@ -89,14 +96,17 @@ export default function GoalForm({
         error={errors.title?.message}
       />
 
-      <Input
-        label={t('goals.targetAmount')}
-        type="number"
-        step="0.01"
-        min="0.01"
-        placeholder="0.00"
-        {...register('targetAmount', { valueAsNumber: true })}
-        error={errors.targetAmount?.message}
+      <Controller
+        name="targetAmount"
+        control={control}
+        render={({ field }) => (
+          <CurrencyInput
+            label={t('goals.targetAmount')}
+            value={field.value}
+            onChange={(value) => field.onChange(value)}
+            error={errors.targetAmount?.message}
+          />
+        )}
       />
 
       <Input
