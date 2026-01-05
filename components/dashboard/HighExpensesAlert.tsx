@@ -22,6 +22,16 @@ export default function HighExpensesAlert({ highExpenses }: HighExpensesAlertPro
   }
 
   const formatDate = (dateString: string) => {
+    // Se a string já estiver no formato YYYY-MM-DD, usar diretamente
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [year, month, day] = dateString.split('-')
+      const date = new Date(Number(year), Number(month) - 1, Number(day))
+      return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'short',
+      })
+    }
+    // Caso contrário, tentar converter normalmente
     return new Date(dateString).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'short',
@@ -61,8 +71,8 @@ export default function HighExpensesAlert({ highExpenses }: HighExpensesAlertPro
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate">
-                    {item.transaction.category === 'Outros' && item.transaction.customCategory
-                      ? `Outros - ${item.transaction.customCategory}`
+                    {(item.transaction.category === 'Outros' || item.transaction.category === 'Assinaturas') && item.transaction.customCategory
+                      ? `${item.transaction.category} - ${item.transaction.customCategory}`
                       : item.transaction.category}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">

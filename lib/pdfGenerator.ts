@@ -180,8 +180,8 @@ export function generateMonthlyPDF({
     
     // Formatar categoria com customCategory se existir
     let category = transaction.category
-    if (transaction.category === 'Outros' && transaction.customCategory) {
-      category = `Outros - ${transaction.customCategory}`
+    if ((transaction.category === 'Outros' || transaction.category === 'Assinaturas') && transaction.customCategory) {
+      category = `${transaction.category} - ${transaction.customCategory}`
     }
 
     const amount = formatCurrency(transaction.amount, currency)

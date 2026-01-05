@@ -59,7 +59,7 @@ export default function TransactionForm({
   // Observar mudanças na categoria para exibir/ocultar campo customCategory
   const selectedCategory = watch('category')
   const selectedType = watch('type') || transaction?.type || 'expense'
-  const showCustomCategory = selectedCategory === 'Outros'
+  const showCustomCategory = selectedCategory === 'Outros' || selectedCategory === 'Assinaturas'
 
   useEffect(() => {
     if (transaction) {
@@ -87,9 +87,9 @@ export default function TransactionForm({
     }
   }, [selectedType, watch, setValue])
 
-  // Limpar customCategory quando categoria mudar de "Outros" para outra
+  // Limpar customCategory quando categoria mudar de "Outros" ou "Assinaturas" para outra
   useEffect(() => {
-    if (selectedCategory !== 'Outros') {
+    if (selectedCategory !== 'Outros' && selectedCategory !== 'Assinaturas') {
       setValue('customCategory', '', { shouldValidate: false })
     }
   }, [selectedCategory, setValue])
@@ -134,17 +134,25 @@ export default function TransactionForm({
         error={errors.category?.message}
       />
 
-      {/* Campo customizado que aparece apenas quando categoria é "Outros" */}
+      {/* Campo customizado que aparece quando categoria é "Outros" ou "Assinaturas" */}
       {showCustomCategory && (
         <div className="transition-opacity duration-200 ease-in-out">
           <Input
-            label={selectedType === 'income' 
-              ? t('transactions.customCategoryIncome') || 'Especifique a receita'
-              : t('transactions.customCategory')}
+            label={
+              selectedType === 'income' 
+                ? t('transactions.customCategoryIncome') || 'Especifique a receita'
+                : selectedCategory === 'Assinaturas'
+                  ? 'Especifique a assinatura'
+                  : t('transactions.customCategory')
+            }
             type="text"
-            placeholder={selectedType === 'income'
-              ? t('transactions.customCategoryIncomePlaceholder') || 'Ex: Venda de produto, Consultoria, etc.'
-              : t('transactions.customCategoryPlaceholder')}
+            placeholder={
+              selectedType === 'income'
+                ? t('transactions.customCategoryIncomePlaceholder') || 'Ex: Venda de produto, Consultoria, etc.'
+                : selectedCategory === 'Assinaturas'
+                  ? 'Ex: Netflix, Spotify, Amazon Prime, etc.'
+                  : t('transactions.customCategoryPlaceholder')
+            }
             {...register('customCategory')}
             error={errors.customCategory?.message}
           />

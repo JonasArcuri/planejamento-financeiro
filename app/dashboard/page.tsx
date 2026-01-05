@@ -17,6 +17,7 @@ import HighExpensesAlert from '@/components/dashboard/HighExpensesAlert'
 import FeatureLock from '@/components/premium/FeatureLock'
 import UpgradePrompt from '@/components/premium/UpgradePrompt'
 import Loading from '@/components/Loading'
+import EmailVerificationBanner from '@/components/auth/EmailVerificationBanner'
 import { usePlan } from '@/hooks/usePlan'
 import { useToast } from '@/contexts/ToastContext'
 import { useGoals } from '@/hooks/useGoals'
@@ -242,6 +243,9 @@ function DashboardContent() {
 
         {/* Main Content - Mobile-first spacing com padding para bottom nav */}
         <main className="px-4 py-4 md:px-6 md:py-5 lg:px-8 lg:py-8 max-w-6xl md:max-w-7xl mx-auto pb-20 lg:pb-8">
+          {/* Banner de verificação de e-mail */}
+          <EmailVerificationBanner />
+
           {/* Título - Mobile-first */}
           <div className="mb-4 md:mb-5 lg:mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1 md:mb-2">{t('dashboard.title')}</h2>

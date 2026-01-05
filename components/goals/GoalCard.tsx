@@ -32,6 +32,17 @@ export default function GoalCard({
   const isNearDeadline = isGoalNearDeadline(goal.deadline)
 
   const formatDate = (dateString: string) => {
+    // Se a string já estiver no formato YYYY-MM-DD, usar diretamente
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [year, month, day] = dateString.split('-')
+      const date = new Date(Number(year), Number(month) - 1, Number(day))
+      return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      })
+    }
+    // Caso contrário, tentar converter normalmente
     return new Date(dateString).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'short',

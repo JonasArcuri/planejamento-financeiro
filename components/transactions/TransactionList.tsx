@@ -44,6 +44,17 @@ export default function TransactionList({
 
   const formatDate = (dateString: string) => {
     const locale = language === 'en' ? 'en-US' : 'pt-BR'
+    // Se a string já estiver no formato YYYY-MM-DD, usar diretamente
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [year, month, day] = dateString.split('-')
+      const date = new Date(Number(year), Number(month) - 1, Number(day))
+      return date.toLocaleDateString(locale, {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })
+    }
+    // Caso contrário, tentar converter normalmente
     return new Date(dateString).toLocaleDateString(locale, {
       day: '2-digit',
       month: '2-digit',
@@ -72,8 +83,8 @@ export default function TransactionList({
                 />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-base text-gray-900 dark:text-white truncate">
-                    {transaction.category === 'Outros' && transaction.customCategory
-                      ? `Outros - ${transaction.customCategory}`
+                    {(transaction.category === 'Outros' || transaction.category === 'Assinaturas') && transaction.customCategory
+                      ? `${transaction.category} - ${transaction.customCategory}`
                       : transaction.category}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">

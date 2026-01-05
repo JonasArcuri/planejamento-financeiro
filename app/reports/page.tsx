@@ -258,8 +258,8 @@ export default function ReportsPage() {
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {filteredTransactions.map((transaction) => {
                   const category =
-                    transaction.category === 'Outros' && transaction.customCategory
-                      ? `Outros - ${transaction.customCategory}`
+                    (transaction.category === 'Outros' || transaction.category === 'Assinaturas') && transaction.customCategory
+                      ? `${transaction.category} - ${transaction.customCategory}`
                       : transaction.category
 
                   return (

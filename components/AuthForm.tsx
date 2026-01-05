@@ -11,6 +11,7 @@ import { useGuest } from '@/contexts/GuestContext'
 import { hasGuestData, getGuestTransactionCount } from '@/lib/guestMigration'
 import Input from './ui/Input'
 import Button from './ui/Button'
+import ForgotPasswordModal from './auth/ForgotPasswordModal'
 
 interface AuthFormProps {
   mode: 'login' | 'signup'
@@ -22,6 +23,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [migrationMessage, setMigrationMessage] = useState<string | null>(null)
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false)
 
   const isLogin = mode === 'login'
 
@@ -41,19 +43,29 @@ export default function AuthForm({ mode }: AuthFormProps) {
     try {
       if (isLogin) {
         const { email, password } = data as LoginFormData
-        await loginWithEmail(email, password)
+        const user = await loginWithEmail(email, password)
         
         // Desativar modo visitante após login bem-sucedido
         if (isGuest) {
           disableGuest()
         }
         
-        router.push('/dashboard')
+        // Se o e-mail não estiver verificado, mostrar aviso mas permitir login
+        // O banner de verificação será exibido no dashboard
+        if (user && !user.emailVerified) {
+          setMigrationMessage('Por favor, verifique seu e-mail. Enviamos um link de verificação para sua caixa de entrada.')
+          // Pequeno delay para mostrar a mensagem
+          setTimeout(() => {
+            router.push('/dashboard')
+          }, 1500)
+        } else {
+          router.push('/dashboard')
+        }
       } else {
         const { name, email, password } = data as SignUpFormData
         const hasGuestTransactions = hasGuestData()
         
-        await signUpWithEmail(email, password, name)
+        const user = await signUpWithEmail(email, password, name)
         
         // Desativar modo visitante após cadastro bem-sucedido
         if (isGuest) {
@@ -70,10 +82,18 @@ export default function AuthForm({ mode }: AuthFormProps) {
           )
         }
         
+        // Mostrar mensagem sobre verificação de e-mail
+        if (user && !user.emailVerified) {
+          setMigrationMessage(
+            (migrationMessage ? migrationMessage + ' ' : '') +
+            'Enviamos um e-mail de verificação. Por favor, verifique sua caixa de entrada.'
+          )
+        }
+        
         // Pequeno delay para mostrar a mensagem
         setTimeout(() => {
           router.push('/dashboard')
-        }, hasGuestTransactions ? 1500 : 0)
+        }, hasGuestTransactions || !user?.emailVerified ? 2000 : 0)
       }
     } catch (err: any) {
       setError(err.message || 'Ocorreu um erro. Tente novamente.')
@@ -136,13 +156,26 @@ export default function AuthForm({ mode }: AuthFormProps) {
           error={errors.email?.message}
         />
 
-        <Input
-          label="Senha"
-          type="password"
-          placeholder="••••••••"
-          {...register('password')}
-          error={errors.password?.message}
-        />
+        <div>
+          <Input
+            label="Senha"
+            type="password"
+            placeholder="••••••••"
+            {...register('password')}
+            error={errors.password?.message}
+          />
+          {isLogin && (
+            <div className="mt-2 text-right">
+              <button
+                type="button"
+                onClick={() => setIsForgotPasswordOpen(true)}
+                className="text-sm text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded px-1"
+              >
+                Esqueci minha senha
+              </button>
+            </div>
+          )}
+        </div>
 
         {!isLogin && (
           <Input
@@ -238,6 +271,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
           </>
         )}
       </p>
+
+      <ForgotPasswordModal
+        isOpen={isForgotPasswordOpen}
+        onClose={() => setIsForgotPasswordOpen(false)}
+      />
     </div>
   )
 }

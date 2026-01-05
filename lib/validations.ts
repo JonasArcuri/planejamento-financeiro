@@ -51,14 +51,14 @@ export const transactionSchema = z.object({
     .min(1, 'Data é obrigatória'),
 }).refine(
   (data) => {
-    // Se a categoria for "Outros", customCategory é obrigatório
-    if (data.category === 'Outros') {
+    // Se a categoria for "Outros" ou "Assinaturas", customCategory é obrigatório
+    if (data.category === 'Outros' || data.category === 'Assinaturas') {
       return data.customCategory && data.customCategory.trim().length > 0
     }
     return true
   },
   {
-    message: 'Especifique a categoria quando selecionar "Outros"',
+    message: 'Especifique a categoria/assinatura',
     path: ['customCategory'], // Mensagem de erro aparecerá no campo customCategory
   }
 )

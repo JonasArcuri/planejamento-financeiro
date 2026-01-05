@@ -7,6 +7,8 @@ import {
   signOut,
   User as FirebaseUser,
   onAuthStateChanged,
+  sendEmailVerification,
+  sendPasswordResetEmail,
 } from 'firebase/auth'
 import { auth } from './config'
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
@@ -25,9 +27,68 @@ export async function loginWithEmail(email: string, password: string) {
   }
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    return userCredential.user
+    const user = userCredential.user
+    
+    // Verificar se o e-mail está verificado
+    if (!user.emailVerified) {
+      // Não bloquear o login, mas retornar informação sobre verificação
+      return user
+    }
+    
+    return user
   } catch (error: any) {
-    throw new Error(error.message || 'Erro ao fazer login')
+    // Tratar erros comuns do Firebase
+    let errorMessage = 'Erro ao fazer login'
+    if (error.code === 'auth/user-not-found') {
+      errorMessage = 'E-mail ou senha incorretos'
+    } else if (error.code === 'auth/wrong-password') {
+      errorMessage = 'E-mail ou senha incorretos'
+    } else if (error.code === 'auth/invalid-email') {
+      errorMessage = 'E-mail inválido'
+    } else if (error.code === 'auth/user-disabled') {
+      errorMessage = 'Esta conta foi desativada'
+    } else if (error.message) {
+      errorMessage = error.message
+    }
+    throw new Error(errorMessage)
+  }
+}
+
+/**
+ * Enviar e-mail de verificação
+ */
+export async function resendEmailVerification() {
+  if (!auth || !auth.currentUser) {
+    throw new Error('Usuário não autenticado')
+  }
+  try {
+    await sendEmailVerification(auth.currentUser)
+  } catch (error: any) {
+    throw new Error(error.message || 'Erro ao enviar e-mail de verificação')
+  }
+}
+
+/**
+ * Enviar e-mail de recuperação de senha
+ */
+export async function resetPassword(email: string) {
+  if (!auth) {
+    throw new Error('Firebase Auth não está inicializado')
+  }
+  try {
+    await sendPasswordResetEmail(auth, email)
+  } catch (error: any) {
+    // Não revelar se o e-mail existe ou não
+    let errorMessage = 'Se o e-mail estiver cadastrado, você receberá um link para redefinir sua senha'
+    if (error.code === 'auth/invalid-email') {
+      errorMessage = 'E-mail inválido'
+    } else if (error.code === 'auth/user-not-found') {
+      // Mesmo erro genérico para não revelar se o e-mail existe
+      errorMessage = 'Se o e-mail estiver cadastrado, você receberá um link para redefinir sua senha'
+    } else if (error.message) {
+      errorMessage = error.message
+    }
+    throw new Error(errorMessage)
   }
 }
 
@@ -49,6 +110,14 @@ export async function signUpWithEmail(
       password
     )
     const user = userCredential.user
+
+    // Enviar e-mail de verificação
+    try {
+      await sendEmailVerification(user)
+    } catch (error) {
+      console.error('Erro ao enviar e-mail de verificação:', error)
+      // Não falhar o cadastro se o envio do e-mail falhar
+    }
 
     // Criar documento do usuário no Firestore
     await setDoc(doc(db, 'users', user.uid), {

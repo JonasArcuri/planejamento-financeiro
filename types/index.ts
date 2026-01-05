@@ -26,7 +26,7 @@ export interface Transaction {
   userId: string
   type: TransactionType
   category: string
-  customCategory?: string // Campo opcional para especificar categoria quando "Outros" é selecionado
+  customCategory?: string // Campo opcional para especificar categoria quando "Outros" ou "Assinaturas" é selecionado
   amount: number
   date: string // ISO date string
   createdAt: string // ISO date string
@@ -35,7 +35,7 @@ export interface Transaction {
 export interface TransactionFormData {
   type: TransactionType
   category: string
-  customCategory?: string // Campo opcional para especificar categoria quando "Outros" é selecionado
+  customCategory?: string // Campo opcional para especificar categoria quando "Outros" ou "Assinaturas" é selecionado
   amount: number
   date: string
 }
@@ -47,6 +47,7 @@ export const EXPENSE_CATEGORIES = [
   'Transporte',
   'Lazer',
   'Saúde',
+  'Assinaturas',
   'Outros',
 ] as const
 

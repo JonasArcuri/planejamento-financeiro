@@ -20,6 +20,40 @@ import { Transaction, TransactionFormData } from '@/types'
 const TRANSACTIONS_COLLECTION = 'transactions'
 
 /**
+ * Converte Timestamp do Firestore para string YYYY-MM-DD usando timezone local
+ * Isso evita problemas de timezone ao exibir datas
+ */
+function timestampToDateString(timestamp: Timestamp | string | undefined): string {
+  if (!timestamp) {
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+  
+  if (typeof timestamp === 'string') {
+    // Se já for uma string YYYY-MM-DD, retornar como está
+    if (/^\d{4}-\d{2}-\d{2}$/.test(timestamp)) {
+      return timestamp
+    }
+    // Se for uma string ISO, converter
+    const date = new Date(timestamp)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+  
+  // Se for Timestamp, converter para Date e depois para string YYYY-MM-DD
+  const date = timestamp.toDate()
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+/**
  * Criar uma nova transação
  */
 export async function createTransaction(
@@ -30,8 +64,11 @@ export async function createTransaction(
     throw new Error('Firestore não está inicializado')
   }
   try {
-    // Converter data string para Timestamp
-    const dateTimestamp = Timestamp.fromDate(new Date(data.date))
+    // Converter data string (YYYY-MM-DD) para Date no timezone local
+    // Isso evita problemas de timezone ao salvar
+    const [year, month, day] = data.date.split('-').map(Number)
+    const localDate = new Date(year, month - 1, day, 12, 0, 0) // Meio-dia no timezone local
+    const dateTimestamp = Timestamp.fromDate(localDate)
     
     const transactionData: any = {
       userId,
@@ -42,8 +79,8 @@ export async function createTransaction(
       createdAt: Timestamp.now(),
     }
 
-    // Salvar customCategory apenas se fornecido (quando categoria é "Outros")
-    if (data.customCategory && data.customCategory.trim().length > 0) {
+    // Salvar customCategory apenas se fornecido (quando categoria é "Outros" ou "Assinaturas")
+    if ((data.category === 'Outros' || data.category === 'Assinaturas') && data.customCategory && data.customCategory.trim().length > 0) {
       transactionData.customCategory = data.customCategory.trim()
     }
 
@@ -70,16 +107,19 @@ export async function updateTransaction(
     // Converter data para Timestamp se fornecida
     const updateData: any = { ...data }
     if (data.date) {
-      updateData.date = Timestamp.fromDate(new Date(data.date))
+      // Converter data string (YYYY-MM-DD) para Date no timezone local
+      const [year, month, day] = data.date.split('-').map(Number)
+      const localDate = new Date(year, month - 1, day, 12, 0, 0) // Meio-dia no timezone local
+      updateData.date = Timestamp.fromDate(localDate)
     }
 
     // Lidar com customCategory:
-    // - Se categoria for "Outros" e customCategory fornecido, salvar
-    // - Se categoria não for "Outros", remover customCategory do Firestore
-    if (data.category === 'Outros' && data.customCategory && data.customCategory.trim().length > 0) {
+    // - Se categoria for "Outros" ou "Assinaturas" e customCategory fornecido, salvar
+    // - Se categoria não for "Outros" ou "Assinaturas", remover customCategory do Firestore
+    if ((data.category === 'Outros' || data.category === 'Assinaturas') && data.customCategory && data.customCategory.trim().length > 0) {
       updateData.customCategory = data.customCategory.trim()
-    } else if (data.category && data.category !== 'Outros') {
-      // Remover customCategory quando categoria não é "Outros"
+    } else if (data.category && data.category !== 'Outros' && data.category !== 'Assinaturas') {
+      // Remover customCategory quando categoria não é "Outros" ou "Assinaturas"
       updateData.customCategory = deleteField()
     }
     
@@ -126,9 +166,7 @@ export async function getTransaction(
         category: data.category,
         customCategory: data.customCategory || undefined, // Incluir customCategory se existir
         amount: data.amount,
-        date: data.date instanceof Timestamp
-          ? data.date.toDate().toISOString()
-          : data.date,
+        date: timestampToDateString(data.date),
         createdAt: data.createdAt instanceof Timestamp
           ? data.createdAt.toDate().toISOString()
           : data.createdAt,
@@ -184,11 +222,7 @@ export async function getUserTransactions(
         category: data.category,
         customCategory: data.customCategory || undefined, // Incluir customCategory se existir
         amount: data.amount,
-        date: data.date instanceof Timestamp
-          ? data.date.toDate().toISOString()
-          : typeof data.date === 'string'
-          ? data.date
-          : new Date().toISOString(),
+        date: timestampToDateString(data.date),
         createdAt: data.createdAt instanceof Timestamp
           ? data.createdAt.toDate().toISOString()
           : data.createdAt,
@@ -217,11 +251,7 @@ export async function getUserTransactions(
             category: data.category,
             customCategory: data.customCategory || undefined, // Incluir customCategory se existir
             amount: data.amount,
-            date: data.date instanceof Timestamp
-              ? data.date.toDate().toISOString()
-              : typeof data.date === 'string'
-              ? data.date
-              : new Date().toISOString(),
+            date: timestampToDateString(data.date),
             createdAt: data.createdAt instanceof Timestamp
               ? data.createdAt.toDate().toISOString()
               : data.createdAt,
